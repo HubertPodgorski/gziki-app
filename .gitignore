@@ -1,0 +1,8 @@
+/node_modules
+.idea
+
+/backend/node_modules
+/backend/.env
+
+# dependencies
+/frontend/node_modules
