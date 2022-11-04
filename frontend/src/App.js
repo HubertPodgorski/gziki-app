@@ -1,19 +1,31 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Tasks from "./pages/Tasks";
-import { Box } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider } from "@mui/material";
+import BottomNavBar from "./components/BottomNavBar";
+import { theme } from "./helpers/theme";
+import TaskForm from "./pages/TaskForm";
+import { TaskContextProvider } from "./contexts/taskFormContext";
 
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Box>
-          <Routes>
-            <Route path="/" element={<Tasks />} />
-          </Routes>
-        </Box>
-      </BrowserRouter>
-    </div>
-  );
-}
+const App = () => (
+  <div className="App">
+    <ThemeProvider theme={theme}>
+      <TaskContextProvider>
+        <CssBaseline />
+
+        <BrowserRouter>
+          {/*TODO: change margin to bottom bar height later on*/}
+          <Box sx={{ marginBottom: 8 }}>
+            <Routes>
+              <Route path="/" element={<Tasks />} />
+              <Route path="/add-edit-task" element={<TaskForm />} />
+            </Routes>
+          </Box>
+
+          <BottomNavBar />
+        </BrowserRouter>
+      </TaskContextProvider>
+    </ThemeProvider>
+  </div>
+);
 
 export default App;

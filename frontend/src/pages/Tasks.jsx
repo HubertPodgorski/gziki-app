@@ -1,69 +1,89 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Box } from "@mui/material";
+import { TaskContext } from "../contexts/taskFormContext";
+import { useNavigate } from "react-router-dom";
 
-const tasks = [
-  {
-    position: { columnIndex: 0, rowIndex: 0, positionIndex: 0 },
-  },
+// TODO: style me later
 
-  {
-    position: { columnIndex: 0, rowIndex: 1, positionIndex: 0 },
-  },
-
-  {
-    position: { columnIndex: 0, rowIndex: 2, positionIndex: 0 },
-  },
-  {
-    position: { columnIndex: 0, rowIndex: 2, positionIndex: 2 },
-  },
-
-  {
-    position: { columnIndex: 1, rowIndex: 0, positionIndex: 0 },
-  },
-  {
-    position: { columnIndex: 1, rowIndex: 0, positionIndex: 1 },
-  },
-  {
-    position: { columnIndex: 1, rowIndex: 0, positionIndex: 3 },
-  },
-];
+// const tasks = [
+//   {
+//     position: { columnIndex: 0, rowIndex: 0, positionIndex: 0 },
+//   },
+//
+//   {
+//     position: { columnIndex: 0, rowIndex: 1, positionIndex: 0 },
+//   },
+//
+//   {
+//     position: { columnIndex: 0, rowIndex: 2, positionIndex: 0 },
+//   },
+//   {
+//     position: { columnIndex: 0, rowIndex: 2, positionIndex: 2 },
+//   },
+//
+//   {
+//     position: { columnIndex: 1, rowIndex: 0, positionIndex: 0 },
+//   },
+//   {
+//     position: { columnIndex: 1, rowIndex: 0, positionIndex: 1 },
+//   },
+//   {
+//     position: { columnIndex: 1, rowIndex: 0, positionIndex: 3 },
+//   },
+// ];
 
 const Tasks = () => {
-  const data = tasks.reduce((tasksRows, item) => {
-    const { rowIndex, columnIndex } = item.position;
+  const [tasks, setTasks] = useState([]);
 
-    if (!tasksRows[rowIndex]) {
-      return { ...tasksRows, [rowIndex]: { [columnIndex]: [item] } };
-    } else {
-      const newTaskRowsAtIndex = tasksRows[rowIndex];
+  const navigate = useNavigate();
 
-      if (!newTaskRowsAtIndex[columnIndex]) {
-        newTaskRowsAtIndex[columnIndex] = [item];
-      } else {
-        const newTasksAtColumnIndex = [
-          ...newTaskRowsAtIndex[columnIndex],
-          item,
-        ].sort(
-          (itemA, itemB) =>
-            itemA.position.positionIndex < itemB.position.positionIndex
-        );
+  const { setInitialFormData } = useContext(TaskContext);
 
-        newTaskRowsAtIndex[columnIndex] = newTasksAtColumnIndex;
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await fetch("/api/tasks");
+
+      const json = await response.json();
+
+      if (response.ok) {
+        setTasks(json);
       }
+    };
 
-      return { ...tasksRows, [rowIndex]: newTaskRowsAtIndex };
-    }
-  }, {});
+    fetchTasks();
+  }, []);
 
-  console.log("data => ", data);
+  const mappedTasks = useMemo(
+    () =>
+      tasks.reduce((tasksRows, item) => {
+        const { rowIndex, columnIndex } = item.position;
+
+        if (!tasksRows[rowIndex]) {
+          return { ...tasksRows, [rowIndex]: { [columnIndex]: [item] } };
+        } else {
+          const newTaskRowsAtIndex = tasksRows[rowIndex];
+
+          if (!newTaskRowsAtIndex[columnIndex]) {
+            newTaskRowsAtIndex[columnIndex] = [item];
+          } else {
+            const newTasksAtColumnIndex = [
+              ...newTaskRowsAtIndex[columnIndex],
+              item,
+            ].sort(
+              (itemA, itemB) =>
+                itemA.position.positionIndex < itemB.position.positionIndex
+            );
+
+            newTaskRowsAtIndex[columnIndex] = newTasksAtColumnIndex;
+          }
+
+          return { ...tasksRows, [rowIndex]: newTaskRowsAtIndex };
+        }
+      }, {}),
+    [tasks]
+  );
+
+  console.log("mappedTasks => ", mappedTasks);
 
   // .singleColumn {
   //     grid-template-columns: 1fr;
@@ -86,7 +106,7 @@ const Tasks = () => {
         alignItems: "flex-start",
       }}
     >
-      {Object.entries(data).map(([rowIndex, columns]) => (
+      {Object.entries(mappedTasks).map(([rowIndex, columns]) => (
         <Box>
           {rowIndex + 1}
 
@@ -120,6 +140,11 @@ const Tasks = () => {
                       background: rowIndex % 2 === 0 ? "#d6df28" : "#f15",
                       display: "flex",
                       flexDirection: "column",
+                    }}
+                    onClick={() => {
+                      setInitialFormData(item);
+                      navigate("/add-edit-task");
+                      // TODO: move me to external method
                     }}
                   >
                     <Box
@@ -159,7 +184,7 @@ const Tasks = () => {
                       <Box>dogs later one here</Box>
                     </Box>
 
-                    <Box>Description here</Box>
+                    <Box>{item.description}</Box>
                   </Box>
                 ))}
               </Box>
