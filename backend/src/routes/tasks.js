@@ -6,11 +6,12 @@ const {
   getTaskById,
   deleteTaskById,
   updateTaskById,
+  updateTasksOrder,
 } = require("../controllers/taskController");
 
-const TaskModel = require("../models/taskModel");
-
 const router = express.Router();
+
+router.patch("/update-order", updateTasksOrder);
 
 router.get("/", getAllTasks);
 

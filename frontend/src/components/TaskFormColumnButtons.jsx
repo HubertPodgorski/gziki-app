@@ -11,8 +11,6 @@ const TaskFormColumnButtons = () => {
 
   const value = useWatch({ name: fieldName });
 
-  console.log("value => ", value);
-
   return (
     <Box
       sx={{

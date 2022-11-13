@@ -4,6 +4,7 @@ export const TaskContext = createContext({
   initialFormData: undefined,
 });
 
+// TODO: start using reducers and actions
 export const TaskContextProvider = ({ children }) => {
   const [initialFormData, setInitialFormData] = useState();
 

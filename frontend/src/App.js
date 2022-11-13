@@ -1,10 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Tasks from "./pages/Tasks";
-import { Box, CssBaseline, ThemeProvider } from "@mui/material";
-import BottomNavBar from "./components/BottomNavBar";
-import { theme } from "./helpers/theme";
-import TaskForm from "./pages/TaskForm";
+import { BrowserRouter } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { TaskContextProvider } from "./contexts/taskFormContext";
+import Router from "./Router";
+import theme from "./helpers/theme";
+import "dayjs/locale/pl";
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:3001");
 
 const App = () => (
   <div className="App">
@@ -13,15 +15,7 @@ const App = () => (
         <CssBaseline />
 
         <BrowserRouter>
-          {/*TODO: change margin to bottom bar height later on*/}
-          <Box sx={{ marginBottom: 8 }}>
-            <Routes>
-              <Route path="/" element={<Tasks />} />
-              <Route path="/add-edit-task" element={<TaskForm />} />
-            </Routes>
-          </Box>
-
-          <BottomNavBar />
+          <Router />
         </BrowserRouter>
       </TaskContextProvider>
     </ThemeProvider>

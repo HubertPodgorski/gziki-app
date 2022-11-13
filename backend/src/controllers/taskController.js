@@ -73,10 +73,35 @@ const updateTaskById = async (req, res) => {
   res.status(200).json(task);
 };
 
+// update tasks order // body = {tasks: [{_id: xx, position: {...}}, {_id: xx2, position: {...}}]}
+const updateTasksOrder = async (req, res) => {
+  console.log("req.body => ", req.body);
+  console.log("req.body.tasks => ", req.body.tasks);
+  if (!req.body.tasks || !req.body.tasks.length) {
+    return res.status(400).json({ error: "TASK_LIST_CANNOT_BE_EMPTY" });
+  }
+
+  let updatedTasks = [];
+
+  for (const task of req.body.tasks) {
+    const updatedTask = await TaskModel.findOneAndUpdate(
+      { _id: task._id },
+      { ...task }
+    );
+
+    if (updatedTask) {
+      updatedTasks = [...updatedTasks, updatedTask];
+    }
+  }
+
+  res.status(200).json(updatedTasks);
+};
+
 module.exports = {
   createTask,
   getAllTasks,
   getTaskById,
   deleteTaskById,
   updateTaskById,
+  updateTasksOrder,
 };
