@@ -27,7 +27,7 @@ const getTaskById = async (req, res) => {
 };
 
 // create new task
-const createTask = async (req, res) => {
+const createTask = (io, socket) => async (req, res) => {
   const { dogs, description, position } = req.body;
 
   try {
@@ -37,10 +37,14 @@ const createTask = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+
+  const allTasks = await TaskModel.find({});
+
+  io.emit("tasks_updated", allTasks);
 };
 
 // delete task
-const deleteTaskById = async (req, res) => {
+const deleteTaskById = (io, socket) => async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -54,10 +58,14 @@ const deleteTaskById = async (req, res) => {
   }
 
   res.status(200).json(task);
+
+  const allTasks = await TaskModel.find({});
+
+  io.emit("tasks_updated", allTasks);
 };
 
 // update task
-const updateTaskById = async (req, res) => {
+const updateTaskById = (io, socket) => async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -71,10 +79,14 @@ const updateTaskById = async (req, res) => {
   }
 
   res.status(200).json(task);
+
+  const allTasks = await TaskModel.find({});
+
+  io.emit("tasks_updated", allTasks);
 };
 
 // update tasks order // body = {tasks: [{_id: xx, position: {...}}, {_id: xx2, position: {...}}]}
-const updateTasksOrder = async (req, res) => {
+const updateTasksOrder = (io, socket) => async (req, res) => {
   console.log("req.body => ", req.body);
   console.log("req.body.tasks => ", req.body.tasks);
   if (!req.body.tasks || !req.body.tasks.length) {
@@ -95,6 +107,10 @@ const updateTasksOrder = async (req, res) => {
   }
 
   res.status(200).json(updatedTasks);
+
+  const allTasks = await TaskModel.find({});
+
+  io.emit("tasks_updated", allTasks);
 };
 
 module.exports = {

@@ -8,13 +8,8 @@ import axios from "axios";
 import FormButtonsGrid from "../../components/FormButtonsGrid";
 import FormSelect from "../../components/inputs/FormSelect";
 
-export const getInitialTaskFormData = (maxRowIndex) => ({
-  description: "",
-  dogs: [],
-  position: { columnIndex: 0, positionIndex: 0, rowIndex: maxRowIndex },
-});
-
-const TaskForm = ({ open, onClose, initialData, editingId }) => {
+const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
+  console.log("initialData => ", initialData);
   // TODO: later maybe fetch dogs for event?
   const [dogs, setDogs] = useState([]);
 
@@ -57,7 +52,10 @@ const TaskForm = ({ open, onClose, initialData, editingId }) => {
     const data = {
       description: values.description,
       dogs: selectedDogs,
-      position: values.position,
+      position: {
+        ...values.position,
+        rowIndex: editingId ? values.position : maxRowIndex,
+      },
     };
 
     const response = editingId

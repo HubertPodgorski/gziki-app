@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TaskContext } from "../../contexts/taskFormContext";
+import { AppContext } from "../../contexts/AppContext";
 import { sortTasksByPositionIndex } from "../../helpers/tasks";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
 import {
@@ -35,13 +35,17 @@ const Tasks = () => {
   const maxRowIndex = useGetMaxRowIndex(mappedTasks);
 
   const {
-    formInitialData,
     editingId,
     formOpen,
     setFormOpen,
     handleEditClick,
     handleFormClose,
-  } = useFormHelpers(getInitialTaskFormData(maxRowIndex));
+    formInitialData,
+  } = useFormHelpers({
+    description: "",
+    dogs: [],
+    position: { columnIndex: 0, positionIndex: 0, rowIndex: maxRowIndex },
+  });
 
   console.log("mappedTasks => ", mappedTasks);
 

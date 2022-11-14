@@ -24,7 +24,7 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors);
+app.use(cors());
 
 // middleware
 app.use(express.json());
@@ -35,7 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/tasks", tasksRoutes);
 app.use("/api/dogs", dogsRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/people", peopleRoutes);
@@ -56,8 +55,11 @@ mongoose
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
+  app.use("/api/tasks", tasksRoutes(io, socket));
 });
 
 server.listen(process.env.SOCKET_PORT, () => {
   console.log(`Listening socket on port ${process.env.SOCKET_PORT}`);
 });
+
+module.exports = { getIo: () => io };

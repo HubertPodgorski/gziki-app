@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { mapTasks, mapTasksForAdminPanel } from "../helpers/tasks";
+import axios from "axios";
 
 export const useGetMappedTasks = (adminPanel) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const response = await fetch("/api/tasks");
+      const { data, status } = await axios.get("/api/tasks");
 
-      const json = await response.json();
-
-      if (response.ok) {
-        setTasks(json);
+      if (status === 200) {
+        setTasks(data);
       }
     };
 
