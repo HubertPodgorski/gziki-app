@@ -10,6 +10,7 @@ const CardContentStyled = styled(CardContent)(({ theme }) => ({
   gridGap: theme.spacing(2),
   height: "112px",
   alignItems: "center",
+  position: "relative",
 }));
 
 const TaskCell = ({ children, adminPanel, id, index, onClick }) => {

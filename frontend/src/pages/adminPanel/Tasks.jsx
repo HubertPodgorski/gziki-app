@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
-import { Box, Button, Chip, Typography } from "@mui/material";
+import { Box, Button, Chip, IconButton, Typography } from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
 import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
@@ -12,6 +12,7 @@ import { getMappedItemsToUpdate } from "../../helpers/dragNDrop";
 import DogChipsGrid from "../../components/DogChipsGrid";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { socket } from "../../components/SocketHandler";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Tasks = () => {
   const mappedTasks = useGetMappedTasks(true);
@@ -30,7 +31,7 @@ const Tasks = () => {
     position: { columnIndex: 0, positionIndex: 0, rowIndex: maxRowIndex },
   });
 
-  const onDelete = async (taskId) => {
+  const onDelete = (taskId) => {
     socket.emit("delete_task", { _id: taskId });
   };
 
@@ -121,6 +122,18 @@ const Tasks = () => {
                         {item.dogs.length === 0 && (
                           <Typography>No dogs selected</Typography>
                         )}
+
+                        <IconButton
+                          sx={{ position: "absolute", top: 2, right: 2 }}
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            onDelete(item._id);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
                       </TaskCell>
                     ))}
                 </TasksColumn>
