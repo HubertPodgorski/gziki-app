@@ -1,34 +1,17 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppContext } from "../../contexts/AppContext";
-import { sortTasksByPositionIndex } from "../../helpers/tasks";
+import React from "react";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
-import {
-  Box,
-  Button,
-  CardHeader,
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, Typography } from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
 import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
 import TasksMainGrid from "../../components/tasksGrid/TasksMainGrid";
 import { DragDropContext } from "react-beautiful-dnd";
-import TaskForm, { getInitialTaskFormData } from "../forms/TaskForm";
+import TaskForm from "../forms/TaskForm";
 import { useGetMaxRowIndex } from "../../hooks/useGetMaxRowIndex";
-import {
-  getMappedItemsToUpdate,
-  getNewAndOldPositionIndexes,
-} from "../../helpers/dragNDrop";
-import axios from "axios";
-import PetsIcon from "@mui/icons-material/Pets";
+import { getMappedItemsToUpdate } from "../../helpers/dragNDrop";
 import DogChipsGrid from "../../components/DogChipsGrid";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
+import { socket } from "../../components/SocketHandler";
 
 const Tasks = () => {
   const mappedTasks = useGetMappedTasks(true);
@@ -47,15 +30,8 @@ const Tasks = () => {
     position: { columnIndex: 0, positionIndex: 0, rowIndex: maxRowIndex },
   });
 
-  console.log("mappedTasks => ", mappedTasks);
-
   const onDelete = async (taskId) => {
-    const { status } = axios.delete(`/api/tasks/${taskId}`);
-
-    if (status === 200) {
-      // TODO: show snackbar that deleting was fine
-      //   TODO: refetch list
-    }
+    socket.emit("delete_task", { _id: taskId });
   };
 
   const onDragEnd = async (result) => {
@@ -76,9 +52,7 @@ const Tasks = () => {
       draggableId
     );
 
-    await axios.patch(`/api/tasks/update-order`, {
-      tasks: mappedItemsToUpdate,
-    });
+    socket.emit("update_tasks_order", { tasks: mappedItemsToUpdate });
   };
 
   const onFormClose = () => {

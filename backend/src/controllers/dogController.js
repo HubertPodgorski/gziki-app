@@ -3,74 +3,74 @@ const DogModel = require("../models/dogModel");
 const mongoose = require("mongoose");
 
 // get all dogs
-const getAllDogs = async (req, res) => {
+const getAllDogs = async (callback) => {
   const dogs = await DogModel.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(dogs);
+  callback(dogs);
 };
 
 // get single dog
-const getDogById = async (req, res) => {
-  const { id } = req.params;
+const getDogById = async (received, callback) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
     return res.status(404).json({ error: "DOG_NOT_FOUND" });
   }
 
-  const dog = await DogModel.findById(id);
+  const dog = await DogModel.findById(_id);
 
-  if (!dog) {
-    return res.status(404).json({ error: "DOG_NOT_FOUND" });
-  }
-
-  res.status(200).json(dog);
+  callback(dog);
 };
 
 // create new dog
-const createDog = async (req, res) => {
-  const { name } = req.body;
+const createDog = async (received, callback, io) => {
+  const { name } = received;
 
-  try {
-    const dog = await DogModel.create({ name });
+  const dog = await DogModel.create({ name });
 
-    res.status(200).json(dog);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const allDogs = await DogModel.find({});
+
+  callback("create_dog", dog);
+  io.emit("dogs_updated", allDogs);
 };
 
 // delete dog
-const deleteDogById = async (req, res) => {
-  const { id } = req.params;
+const deleteDogById = async (received, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "DOG_NOT_FOUND" });
-  }
+  // TODO: WS handler for dog not found
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "DOG_NOT_FOUND" });
+  // }
 
-  const dog = await DogModel.findOneAndDelete({ _id: id });
+  await DogModel.findOneAndDelete({ _id });
 
-  if (!dog) {
-    return res.status(400).json({ error: "DOG_NOT_FOUND" });
-  }
+  // TODO: WS handler for dog not found
 
-  res.status(200).json(dog);
+  const allDogs = await DogModel.find({});
+  io.emit("dogs_updated", allDogs);
 };
 
 // update dog
-const updateDogById = async (req, res) => {
-  const { id } = req.params;
+const updateDogById = async (received, callback, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "DOG_NOT_FOUND" });
-  }
+  // TODO: WS handler for dog not found
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "DOG_NOT_FOUND" });
+  // }
 
-  const dog = await DogModel.findOneAndUpdate({ _id: id }, { ...req.body });
+  const dog = await DogModel.findOneAndUpdate({ _id: _id }, { ...received });
 
-  if (!dog) {
-    return res.status(404).json({ error: "DOG_NOT_FOUND" });
-  }
+  // TODO: WS handler for dog not found
+  // if (!dog) {
+  //   return res.status(404).json({ error: "DOG_NOT_FOUND" });
+  // }
 
-  res.status(200).json(dog);
+  const allDogs = await DogModel.find({});
+
+  callback(dog);
+  io.emit("dogs_updated", allDogs);
 };
 
 module.exports = {

@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-const tasksRoutes = require("./routes/tasks");
-const dogsRoutes = require("./routes/dogs");
-const eventsRoutes = require("./routes/events");
-const peopleRoutes = require("./routes/people");
+const tasksSocketRoutes = require("./socketRoutes/tasks");
+const dogsSocketRoutes = require("./socketRoutes/dogs");
+const eventsSocketRoutes = require("./socketRoutes/events");
+const peopleSocketRoutes = require("./socketRoutes/people");
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -35,10 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/dogs", dogsRoutes);
-app.use("/api/events", eventsRoutes);
-app.use("/api/people", peopleRoutes);
-
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
@@ -55,11 +51,13 @@ mongoose
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
-  app.use("/api/tasks", tasksRoutes(io, socket));
+
+  dogsSocketRoutes(io, socket);
+  eventsSocketRoutes(io, socket);
+  peopleSocketRoutes(io, socket);
+  tasksSocketRoutes(io, socket);
 });
 
 server.listen(process.env.SOCKET_PORT, () => {
   console.log(`Listening socket on port ${process.env.SOCKET_PORT}`);
 });
-
-module.exports = { getIo: () => io };

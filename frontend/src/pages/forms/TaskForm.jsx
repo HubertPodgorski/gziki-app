@@ -1,27 +1,15 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Box, Button, DialogActions, Typography } from "@mui/material";
+import React, { useContext, useEffect, useMemo } from "react";
+import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
 import FormSelect from "../../components/inputs/FormSelect";
+import { AppContext } from "../../contexts/AppContext";
+import { socket } from "../../components/SocketHandler";
 
 const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
-  console.log("initialData => ", initialData);
-  // TODO: later maybe fetch dogs for event?
-  const [dogs, setDogs] = useState([]);
-
-  useEffect(() => {
-    const fetchDogs = async () => {
-      const { data } = await axios.get("/api/dogs");
-
-      setDogs(data);
-    };
-
-    fetchDogs();
-  }, []);
+  const { dogs } = useContext(AppContext);
 
   const formMethods = useForm({
     defaultValues: initialData,
@@ -36,7 +24,6 @@ const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
   }, [initialData]);
 
   const onSubmit = async (values) => {
-    console.log("values => ", values);
     // TODO: map selected dogs to dogs
     // TODO: extract me to external method - used twice already
     const selectedDogs = values.dogs
@@ -54,17 +41,18 @@ const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
       dogs: selectedDogs,
       position: {
         ...values.position,
-        rowIndex: editingId ? values.position : maxRowIndex,
+        rowIndex: editingId ? values.position.rowIndex : maxRowIndex,
       },
     };
 
-    const response = editingId
-      ? await axios.patch(`/api/tasks/${editingId}`, data)
-      : await axios.post("/api/tasks", data);
-
-    if (response.status === 200) {
-      onClose();
-      return;
+    if (editingId) {
+      socket.emit("update_task", { ...data, _id: editingId }, () => {
+        onClose();
+      });
+    } else {
+      socket.emit("add_task", data, () => {
+        onClose();
+      });
     }
 
     // TODO: error handling eventually?

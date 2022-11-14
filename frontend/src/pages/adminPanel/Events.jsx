@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import DogForm from "../forms/DogForm";
+import React, { useContext } from "react";
 import {
   Button,
   IconButton,
@@ -7,15 +6,16 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
-import axios from "axios";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventForm from "../forms/EventForm";
 import dayjs from "dayjs";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
+import { AppContext } from "../../contexts/AppContext";
+import { socket } from "../../components/SocketHandler";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const { events } = useContext(AppContext);
 
   const {
     formInitialData,
@@ -29,20 +29,8 @@ const Events = () => {
     date: new Date().toString(),
   });
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const { data } = await axios.get("/api/events");
-
-      setEvents(data);
-    };
-
-    fetchEvents();
-  }, []);
-
   const onDeleteClick = async (id) => {
-    await axios.delete(`/api/events/${id}`);
-
-    // TODO: reload data
+    socket.emit("delete_event", { _id: id });
   };
 
   const onFormClose = () => {

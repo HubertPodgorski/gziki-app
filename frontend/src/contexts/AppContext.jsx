@@ -1,18 +1,31 @@
 import { createContext, useState } from "react";
 
 export const AppContext = createContext({
-  initialFormData: undefined,
   tasks: [],
+  dogs: [],
+  events: [],
+  people: [],
 });
 
 // TODO: start using reducers and actions
 export const AppContextProvider = ({ children }) => {
-  const [initialFormData, setInitialFormData] = useState();
   const [tasks, setTasks] = useState([]);
+  const [dogs, setDogs] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [people, setPeople] = useState([]);
 
   return (
     <AppContext.Provider
-      value={{ initialFormData, setInitialFormData, tasks, setTasks }}
+      value={{
+        tasks,
+        setTasks,
+        dogs,
+        setDogs,
+        events,
+        setEvents,
+        people,
+        setPeople,
+      }}
     >
       {children}
     </AppContext.Provider>

@@ -3,61 +3,65 @@ const TaskModel = require("../models/taskModel");
 const mongoose = require("mongoose");
 
 // get all tasks
-const getAllTasks = async (req, res) => {
+const getAllTasks = async (callback) => {
   const tasks = await TaskModel.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(tasks);
+  callback(tasks);
 };
 
 // get single task
-const getTaskById = async (req, res) => {
-  const { id } = req.params;
+const getTaskById = async (received, callback) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "TASK_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
+  // }
 
-  const task = await TaskModel.findById(id);
+  const task = await TaskModel.findById(_id);
 
-  if (!task) {
-    return res.status(404).json({ error: "TASK_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!task) {
+  //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
+  // }
 
-  res.status(200).json(task);
+  callback(task);
 };
 
 // create new task
-const createTask = (io, socket) => async (req, res) => {
-  const { dogs, description, position } = req.body;
+const createTask = async (received, callback, io) => {
+  const { dogs, description, position } = received;
 
-  try {
-    const task = await TaskModel.create({ dogs, description, position });
+  const task = await TaskModel.create({ dogs, description, position });
 
-    res.status(200).json(task);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  // TODO: handle that
+  // try {
+  //   res.status(200).json(task);
+  // } catch (error) {
+  //   res.status(400).json({ error: error.message });
+  // }
 
   const allTasks = await TaskModel.find({});
 
+  callback(task);
   io.emit("tasks_updated", allTasks);
 };
 
 // delete task
-const deleteTaskById = (io, socket) => async (req, res) => {
-  const { id } = req.params;
+const deleteTaskById = async (received, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "TASK_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
+  // }
 
-  const task = await TaskModel.findOneAndDelete({ _id: id });
+  await TaskModel.findOneAndDelete({ _id });
 
-  if (!task) {
-    return res.status(400).json({ error: "TASK_NOT_FOUND" });
-  }
-
-  res.status(200).json(task);
+  // TODO: handle that
+  // if (!task) {
+  //   return res.status(400).json({ error: "TASK_NOT_FOUND" });
+  // }
 
   const allTasks = await TaskModel.find({});
 
@@ -65,48 +69,32 @@ const deleteTaskById = (io, socket) => async (req, res) => {
 };
 
 // update task
-const updateTaskById = (io, socket) => async (req, res) => {
-  const { id } = req.params;
+const updateTaskById = async (received, callback, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "TASK_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
+  // }
 
-  const task = await TaskModel.findOneAndUpdate({ _id: id }, { ...req.body });
+  const task = await TaskModel.findOneAndUpdate({ _id }, { ...received });
 
-  if (!task) {
-    return res.status(404).json({ error: "TASK_NOT_FOUND" });
-  }
-
-  res.status(200).json(task);
+  // TODO: handle that
+  // if (!task) {
+  //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
+  // }
 
   const allTasks = await TaskModel.find({});
 
+  callback(task);
   io.emit("tasks_updated", allTasks);
 };
 
 // update tasks order // body = {tasks: [{_id: xx, position: {...}}, {_id: xx2, position: {...}}]}
-const updateTasksOrder = (io, socket) => async (req, res) => {
-  console.log("req.body => ", req.body);
-  console.log("req.body.tasks => ", req.body.tasks);
-  if (!req.body.tasks || !req.body.tasks.length) {
-    return res.status(400).json({ error: "TASK_LIST_CANNOT_BE_EMPTY" });
+const updateTasksOrder = async (received, io) => {
+  for (const task of received.tasks) {
+    await TaskModel.findOneAndUpdate({ _id: task._id }, { ...task });
   }
-
-  let updatedTasks = [];
-
-  for (const task of req.body.tasks) {
-    const updatedTask = await TaskModel.findOneAndUpdate(
-      { _id: task._id },
-      { ...task }
-    );
-
-    if (updatedTask) {
-      updatedTasks = [...updatedTasks, updatedTask];
-    }
-  }
-
-  res.status(200).json(updatedTasks);
 
   const allTasks = await TaskModel.find({});
 

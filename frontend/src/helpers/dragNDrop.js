@@ -1,7 +1,6 @@
 export const getNewAndOldPositionIndexes = (destination, source) => {
   const [newRowIndexString, newColumnIndexString] =
     destination.droppableId.split("_");
-  console.log("newRowIndexString => ", newRowIndexString);
   const newCellIndex = destination.index;
   const newColumnIndex = +newColumnIndexString;
   const newRowIndex = +newRowIndexString;

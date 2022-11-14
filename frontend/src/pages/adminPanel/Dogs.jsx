@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import DogForm from "../forms/DogForm";
 import {
   Button,
@@ -7,13 +7,14 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
-import axios from "axios";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
+import { AppContext } from "../../contexts/AppContext";
+import { socket } from "../../components/SocketHandler";
 
 const Dogs = () => {
-  const [dogs, setDogs] = useState([]);
+  const { dogs } = useContext(AppContext);
 
   const {
     formInitialData,
@@ -27,22 +28,8 @@ const Dogs = () => {
     dogs: [],
   });
 
-  useEffect(() => {
-    const fetchDogs = async () => {
-      const { data } = await axios.get("/api/dogs");
-
-      setDogs(data);
-    };
-
-    fetchDogs();
-  }, []);
-
-  console.log("dogs => ", dogs);
-
   const onDeleteClick = async (id) => {
-    await axios.delete(`/api/dogs/${id}`);
-
-    // TODO: reload data
+    socket.emit("delete_dog", { _id: id });
   };
 
   const onFormClose = () => {

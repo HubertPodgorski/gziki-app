@@ -3,77 +3,84 @@ const PersonModel = require("../models/personModel");
 const mongoose = require("mongoose");
 
 // get all people
-const getAllPeople = async (req, res) => {
+const getAllPeople = async (callback) => {
   const people = await PersonModel.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(people);
+  callback(people);
 };
 
 // get single person
-const getPersonById = async (req, res) => {
-  const { id } = req.params;
+const getPersonById = async (received, callback) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  const person = await PersonModel.findById(id);
+  const person = await PersonModel.findById(_id);
 
-  if (!person) {
-    return res.status(404).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!person) {
+  //   return res.status(404).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  res.status(200).json(person);
+  callback(person);
 };
 
 // create new person
-const createPerson = async (req, res) => {
-  const { name, dogs } = req.body;
+const createPerson = (received, callback, io) => async (req, res) => {
+  const { name, dogs } = received;
 
-  try {
-    const person = await PersonModel.create({ name, dogs });
+  const person = await PersonModel.create({ name, dogs });
 
-    res.status(200).json(person);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const allPeople = await PersonModel.find({});
+
+  callback(person);
+  io.emit("people_updated", allPeople);
 };
 
 // delete person
-const deletePersonById = async (req, res) => {
-  const { id } = req.params;
+const deletePersonById = async (received, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  const person = await PersonModel.findOneAndDelete({ _id: id });
+  await PersonModel.findOneAndDelete({ _id });
 
-  if (!person) {
-    return res.status(400).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!person) {
+  //   return res.status(400).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  res.status(200).json(person);
+  const allPeople = await PersonModel.find({});
+
+  io.emit("people_updated", allPeople);
 };
 
 // update person
-const updatePersonById = async (req, res) => {
-  const { id } = req.params;
+const updatePersonById = async (received, callback, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  const person = await PersonModel.findOneAndUpdate(
-    { _id: id },
-    { ...req.body }
-  );
+  const person = await PersonModel.findOneAndUpdate({ _id }, { ...received });
 
-  if (!person) {
-    return res.status(404).json({ error: "PERSON_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!person) {
+  //   return res.status(404).json({ error: "PERSON_NOT_FOUND" });
+  // }
 
-  res.status(200).json(person);
+  const allPeople = await PersonModel.find({});
+
+  callback(person);
+  io.emit("people_updated", allPeople);
 };
 
 module.exports = {

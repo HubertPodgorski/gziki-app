@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DogForm from "../forms/DogForm";
 import {
   Button,
@@ -9,15 +9,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import axios from "axios";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonForm from "../forms/PersonForm";
 import PetsIcon from "@mui/icons-material/Pets";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
+import { AppContext } from "../../contexts/AppContext";
+import { socket } from "../../components/SocketHandler";
 
 const People = () => {
-  const [people, setPeople] = useState([]);
+  const { people } = useContext(AppContext);
 
   const {
     formInitialData,
@@ -31,20 +32,8 @@ const People = () => {
     dogs: [],
   });
 
-  useEffect(() => {
-    const fetchPeople = async () => {
-      const { data } = await axios.get("/api/people");
-
-      setPeople(data);
-    };
-
-    fetchPeople();
-  }, []);
-
   const onDeleteClick = async (id) => {
-    await axios.delete(`/api/people/${id}`);
-
-    // TODO: reload data?? Probably WS will deal with this
+    socket.emit("delete_person", { _id: id });
   };
 
   const onFormClose = () => {

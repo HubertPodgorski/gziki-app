@@ -3,74 +3,83 @@ const EventModel = require("../models/eventModel");
 const mongoose = require("mongoose");
 
 // get all events
-const getAllEvents = async (req, res) => {
+const getAllEvents = async (callback) => {
   const events = await EventModel.find({}).sort({ createdAt: -1 });
 
-  res.status(200).json(events);
+  callback(events);
 };
 
 // get single event
-const getEventById = async (req, res) => {
-  const { id } = req.params;
+const getEventById = async (received, callback) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that error
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  const event = await EventModel.findById(id);
+  const event = await EventModel.findById(_id);
 
-  if (!event) {
-    return res.status(404).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that error
+  // if (!event) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  res.status(200).json(event);
+  callback(event);
 };
 
 // create new event
-const createEvent = async (req, res) => {
-  const { name, date } = req.body;
+const createEvent = async (received, callback, io) => {
+  const { name, date } = received;
 
-  try {
-    const event = await EventModel.create({ name, date });
+  const event = await EventModel.create({ name, date });
+  const allEvents = await EventModel.find({});
 
-    res.status(200).json(event);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  callback(event);
+  io.emit("events_updated", allEvents);
 };
 
 // delete event
-const deleteEventById = async (req, res) => {
-  const { id } = req.params;
+const deleteEventById = async (received, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  const event = await EventModel.findOneAndDelete({ _id: id });
+  const event = await EventModel.findOneAndDelete({ _id });
 
-  if (!event) {
-    return res.status(400).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!event) {
+  //   return res.status(400).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  res.status(200).json(event);
+  const allEvents = await EventModel.find({});
+
+  io.emit("events_updated", allEvents);
 };
 
 // update event
-const updateEventById = async (req, res) => {
-  const { id } = req.params;
+const updateEventById = async (received, callback, io) => {
+  const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  const event = await EventModel.findOneAndUpdate({ _id: id }, { ...req.body });
+  const event = await EventModel.findOneAndUpdate({ _id }, { ...received });
 
-  if (!event) {
-    return res.status(404).json({ error: "EVENT_NOT_FOUND" });
-  }
+  // TODO: handle that
+  // if (!event) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
 
-  res.status(200).json(event);
+  const allEvents = await EventModel.find({});
+
+  callback(event);
+  io.emit("events_updated", allEvents);
 };
 
 module.exports = {

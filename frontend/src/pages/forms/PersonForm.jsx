@@ -1,25 +1,15 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Box, Button, DialogActions, Typography } from "@mui/material";
+import React, { useContext, useEffect, useMemo } from "react";
+import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
 import FormSelect from "../../components/inputs/FormSelect";
+import { AppContext } from "../../contexts/AppContext";
+import { socket } from "../../components/SocketHandler";
 
 const PersonForm = ({ open, onClose, initialData, editingId }) => {
-  const [dogs, setDogs] = useState([]);
-
-  useEffect(() => {
-    const fetchDogs = async () => {
-      const { data } = await axios.get("/api/dogs");
-
-      setDogs(data);
-    };
-
-    fetchDogs();
-  }, []);
+  const { dogs } = useContext(AppContext);
 
   const formMethods = useForm({
     defaultValues: initialData,
@@ -50,13 +40,12 @@ const PersonForm = ({ open, onClose, initialData, editingId }) => {
       dogs: selectedDogs,
     };
 
-    const response = (await editingId)
-      ? await axios.patch(`/api/people/${editingId}`, data)
-      : await axios.post("/api/people", data);
-
-    if (response.status === 200) {
-      onClose();
-      return;
+    if (editingId) {
+      socket.emit("update_person", { ...data, _id: editingId }, () =>
+        onClose()
+      );
+    } else {
+      socket.emit("add_person", data, () => onClose());
     }
 
     // TODO: error handling eventually?

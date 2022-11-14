@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useMemo } from "react";
-import { Box, Button, DialogActions, Typography } from "@mui/material";
+import React, { useEffect, useMemo } from "react";
+import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
+import { socket } from "../../components/SocketHandler";
 
 const DogForm = ({ open, onClose, initialData, editingId }) => {
   const formMethods = useForm({
@@ -22,13 +21,13 @@ const DogForm = ({ open, onClose, initialData, editingId }) => {
 
   const onSubmit = async ({ name }) => {
     const data = { name };
-    const response = editingId
-      ? await axios.patch(`/api/dogs/${editingId}`, data)
-      : await axios.post("/api/dogs", data);
 
-    if (response.status === 200) {
-      onClose();
-      return;
+    if (editingId) {
+      await socket.emit("update_dog", { _id: editingId, ...data }, () =>
+        onClose()
+      );
+    } else {
+      await socket.emit("add_dog", data, () => onClose());
     }
 
     // TODO: error handling eventually?

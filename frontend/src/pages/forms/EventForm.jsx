@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Box, Button, DialogActions, Typography } from "@mui/material";
+import React, { useEffect, useMemo } from "react";
+import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
-import FormSelect from "../../components/inputs/FormSelect";
 import FormDatePicker from "../../components/inputs/FormDatePicker";
+import { socket } from "../../components/SocketHandler";
 
 const EventForm = ({ open, onClose, initialData, editingId }) => {
   const formMethods = useForm({
@@ -28,13 +26,14 @@ const EventForm = ({ open, onClose, initialData, editingId }) => {
       date: values.date,
     };
 
-    const response = editingId
-      ? await axios.patch(`/api/events/${editingId}`, data)
-      : await axios.post("/api/events", data);
-
-    if (response.status === 200) {
-      onClose();
-      return;
+    if (editingId) {
+      socket.emit("update_event", { ...data, _id: editingId }, () => {
+        onClose();
+      });
+    } else {
+      socket.emit("add_event", data, () => {
+        onClose();
+      });
     }
 
     // TODO: error handling eventually?

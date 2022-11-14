@@ -2,21 +2,50 @@ import React, { useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { AppContext } from "../contexts/AppContext";
 
-const socket = io.connect("http://localhost:3001");
+export const socket = io.connect("http://localhost:3001");
 
 const SocketHandler = () => {
-  const { setTasks, tasks } = useContext(AppContext);
+  const { setTasks, setDogs, setEvents, setPeople } = useContext(AppContext);
 
   useEffect(() => {
     socket.on("tasks_updated", (received) => {
-      console.log("received => ", received);
-      setTasks(received.data);
+      setTasks(received);
+    });
+
+    socket.on("people_updated", (received) => {
+      setPeople(received);
+    });
+
+    socket.on("dogs_updated", (received) => {
+      setDogs(received);
+    });
+
+    socket.on("events_updated", (received) => {
+      setEvents(received);
     });
 
     return () => {
       socket.disconnect();
     };
   }, [socket]);
+
+  useEffect(() => {
+    socket.emit("get_all_dogs", (dogs) => {
+      setDogs(dogs);
+    });
+
+    socket.emit("get_all_events", (events) => {
+      setEvents(events);
+    });
+
+    socket.emit("get_all_tasks", (tasks) => {
+      setTasks(tasks);
+    });
+
+    socket.emit("get_all_people", (people) => {
+      setPeople(people);
+    });
+  }, []);
 
   return null;
 };

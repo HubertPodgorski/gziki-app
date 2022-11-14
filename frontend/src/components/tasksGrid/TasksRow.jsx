@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
 
-const TasksRow = ({ children, rowIndex }) => {
+const TasksRow = ({ children, rowIndex, userPanel }) => {
   const theme = useTheme();
 
   return (
@@ -11,6 +11,8 @@ const TasksRow = ({ children, rowIndex }) => {
         display: "grid",
         gridGap: theme.spacing(2),
         gridTemplateColumns: "1fr 1fr",
+        border: userPanel ? "1px solid #ddd" : "none",
+        borderRadius: "6px",
       }}
     >
       {children}
