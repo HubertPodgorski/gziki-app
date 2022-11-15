@@ -1,19 +1,20 @@
 import React, { useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { AppContext } from "../contexts/AppContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export const socket = io.connect("http://localhost:3001");
 
 const SocketHandler = () => {
-  const { setTasks, setDogs, setEvents, setPeople } = useContext(AppContext);
+  const { setTasks, setDogs, setEvents, setUsers } = useContext(AppContext);
 
   useEffect(() => {
     socket.on("tasks_updated", (received) => {
       setTasks(received);
     });
 
-    socket.on("people_updated", (received) => {
-      setPeople(received);
+    socket.on("users_updated", (received) => {
+      setUsers(received);
     });
 
     socket.on("dogs_updated", (received) => {
@@ -42,8 +43,8 @@ const SocketHandler = () => {
       setTasks(tasks);
     });
 
-    socket.emit("get_all_people", (people) => {
-      setPeople(people);
+    socket.emit("get_all_users", (users) => {
+      setUsers(users);
     });
   }, []);
 

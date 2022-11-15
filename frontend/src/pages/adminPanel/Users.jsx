@@ -11,14 +11,14 @@ import {
 } from "@mui/material";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PersonForm from "../forms/PersonForm";
+import UserForm from "../forms/UserForm";
 import PetsIcon from "@mui/icons-material/Pets";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 
-const People = () => {
-  const { people } = useContext(AppContext);
+const Users = () => {
+  const { users } = useContext(AppContext);
 
   const {
     formInitialData,
@@ -33,7 +33,7 @@ const People = () => {
   });
 
   const onDeleteClick = async (id) => {
-    socket.emit("delete_person", { _id: id });
+    socket.emit("delete_user", { _id: id });
   };
 
   const onFormClose = () => {
@@ -56,7 +56,7 @@ const People = () => {
     <>
       <CenteredContent>
         <List>
-          {people.map(({ name, _id, dogs }) => (
+          {users.map(({ name, _id, dogs }) => (
             <ListItem
               divider
               key={_id}
@@ -94,7 +94,7 @@ const People = () => {
         </Button>
       </CenteredContent>
 
-      <PersonForm
+      <UserForm
         onClose={onFormClose}
         open={formOpen}
         initialData={formInitialData}
@@ -104,4 +104,4 @@ const People = () => {
   );
 };
 
-export default People;
+export default Users;

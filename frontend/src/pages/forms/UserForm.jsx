@@ -8,7 +8,7 @@ import FormSelect from "../../components/inputs/FormSelect";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 
-const PersonForm = ({ open, onClose, initialData, editingId }) => {
+const UserForm = ({ open, onClose, initialData, editingId }) => {
   const { dogs } = useContext(AppContext);
 
   const formMethods = useForm({
@@ -41,11 +41,9 @@ const PersonForm = ({ open, onClose, initialData, editingId }) => {
     };
 
     if (editingId) {
-      socket.emit("update_person", { ...data, _id: editingId }, () =>
-        onClose()
-      );
+      socket.emit("update_user", { ...data, _id: editingId }, () => onClose());
     } else {
-      socket.emit("add_person", data, () => onClose());
+      socket.emit("add_user", data, () => onClose());
     }
 
     // TODO: error handling eventually?
@@ -53,7 +51,7 @@ const PersonForm = ({ open, onClose, initialData, editingId }) => {
 
   return (
     <FormProvider {...formMethods}>
-      <FormModal onClose={onClose} open={open} title="Person form">
+      <FormModal onClose={onClose} open={open} title="User form">
         <FormGrid>
           <FormTextField name="name" label="Name" required />
 
@@ -84,4 +82,4 @@ const PersonForm = ({ open, onClose, initialData, editingId }) => {
   );
 };
 
-export default PersonForm;
+export default UserForm;

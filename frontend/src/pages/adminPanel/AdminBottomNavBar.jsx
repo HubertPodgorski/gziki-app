@@ -50,7 +50,7 @@ const UserBottomNavBar = () => (
         <BottomNavigationAction label="Treningi" icon={<CalendarMonthIcon />} />
       </Link>
 
-      <Link to={adminRoutes.people}>
+      <Link to={adminRoutes.users}>
         <BottomNavigationAction label="Ludzie" icon={<PersonIcon />} />
       </Link>
     </BottomNavigation>

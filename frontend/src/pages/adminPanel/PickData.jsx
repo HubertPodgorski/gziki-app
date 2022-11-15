@@ -13,7 +13,7 @@ const PickData = () => {
           // icon={<AdminPanelSettingsIcon />}
         />
       </Link>
-      <Link to={"/data-panel/people"}>
+      <Link to={"/data-panel/users"}>
         <BottomNavigationAction
           label="Ludzie"
           // icon={<AdminPanelSettingsIcon />}

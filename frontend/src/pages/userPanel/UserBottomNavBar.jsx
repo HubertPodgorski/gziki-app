@@ -9,32 +9,45 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { Link } from "react-router-dom";
 import { adminRoutes, userRoutes } from "../../helpers/routesAndPaths";
+import { useIsAdmin } from "../../hooks/useIsAdmin";
 
 // TODO: add correct button, redirect to calendar, panel and adding tasks
 // TODO: change to app bar from MUI
-const UserBottomNavBar = () => (
-  <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
-    <BottomNavigation showLabels>
-      <Link to={userRoutes.tasks}>
-        <BottomNavigationAction
-          label="Lista"
-          icon={<FormatListNumberedIcon />}
-        />
-      </Link>
+const UserBottomNavBar = () => {
+  const isAdmin = useIsAdmin();
 
-      <Link to={userRoutes.calendar}>
-        <BottomNavigationAction label="Treningi" icon={<CalendarMonthIcon />} />
-      </Link>
+  return (
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
+    >
+      <BottomNavigation showLabels>
+        <Link to={userRoutes.tasks}>
+          <BottomNavigationAction
+            label="Lista"
+            icon={<FormatListNumberedIcon />}
+          />
+        </Link>
 
-      {/*TODO: show it only if has admin rights*/}
-      <Link to={adminRoutes.main}>
-        <BottomNavigationAction
-          label="Panel zarządzania"
-          icon={<AdminPanelSettingsIcon />}
-        />
-      </Link>
-    </BottomNavigation>
-  </Paper>
-);
+        <Link to={userRoutes.calendar}>
+          <BottomNavigationAction
+            label="Treningi"
+            icon={<CalendarMonthIcon />}
+          />
+        </Link>
+
+        {/*TODO: show it only if has admin rights*/}
+        {isAdmin && (
+          <Link to={adminRoutes.main}>
+            <BottomNavigationAction
+              label="Panel zarządzania"
+              icon={<AdminPanelSettingsIcon />}
+            />
+          </Link>
+        )}
+      </BottomNavigation>
+    </Paper>
+  );
+};
 
 export default UserBottomNavBar;

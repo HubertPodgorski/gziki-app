@@ -27,6 +27,7 @@ const Events = () => {
   } = useFormHelpers({
     name: "",
     date: new Date().toString(),
+    dogs: [],
   });
 
   const onDeleteClick = async (id) => {

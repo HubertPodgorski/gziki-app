@@ -1,3 +1,8 @@
+export const notAuthenticatedRoutes = {
+  login: "/login",
+  signup: "/signup",
+};
+
 export const userRoutes = {
   main: "/user-panel",
   tasks: "/user-panel/tasks",
@@ -6,8 +11,8 @@ export const userRoutes = {
 
 export const userPaths = {
   root: "/user-panel",
-  tasks: "tasks",
-  calendar: "calendar",
+  tasks: "/user-panel/tasks",
+  calendar: "/user-panel/calendar",
 };
 
 export const adminRoutes = {
@@ -16,7 +21,7 @@ export const adminRoutes = {
   tasks: "/admin-panel/tasks",
   events: "/admin-panel/events",
   dogs: "/admin-panel/dogs",
-  people: "/admin-panel/people",
+  users: "/admin-panel/users",
 };
 
 export const adminPaths = {
@@ -25,5 +30,5 @@ export const adminPaths = {
   tasks: "tasks",
   events: "events",
   dogs: "dogs",
-  people: "people",
+  users: "users",
 };

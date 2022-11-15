@@ -1,5 +1,3 @@
-const express = require("express");
-
 const {
   createTask,
   getAllTasks,
@@ -8,24 +6,6 @@ const {
   updateTaskById,
   updateTasksOrder,
 } = require("../controllers/taskController");
-
-const outerRouter = (io, socket) => {
-  const router = express.Router();
-
-  router.patch("/update-order", updateTasksOrder(io, socket));
-
-  router.get("/", getAllTasks);
-
-  router.post("/", createTask(io, socket));
-
-  router.get("/:id", getTaskById);
-
-  router.delete("/:id", deleteTaskById(io, socket));
-
-  router.patch("/:id", updateTaskById(io, socket));
-
-  return router;
-};
 
 const routes = (io, socket) => {
   socket.on("get_all_tasks", (callback) => getAllTasks(callback));

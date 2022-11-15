@@ -5,10 +5,11 @@ import Router from "./Router";
 import theme from "./helpers/theme";
 import "dayjs/locale/pl";
 import SocketHandler from "./components/SocketHandler";
+import { AuthContextProvider } from "./contexts/AuthContext";
 
 const App = () => (
-  <div className="App">
-    <ThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
+    <AuthContextProvider>
       <AppContextProvider>
         <SocketHandler />
 
@@ -18,8 +19,8 @@ const App = () => (
           <Router />
         </BrowserRouter>
       </AppContextProvider>
-    </ThemeProvider>
-  </div>
+    </AuthContextProvider>
+  </ThemeProvider>
 );
 
 export default App;
