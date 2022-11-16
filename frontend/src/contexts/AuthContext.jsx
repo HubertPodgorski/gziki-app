@@ -5,7 +5,6 @@ export const AuthContext = createContext({ user: null });
 // TODO: start using reducers and actions
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [jwt, setJwt] = useState(null);
 
   const logout = () => {
     setUser(null);
@@ -15,17 +14,30 @@ export const AuthContextProvider = ({ children }) => {
     setUser(user);
   };
 
+  const clearUserData = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   useEffect(() => {
     const userLocalstorage = localStorage.getItem("user");
 
     if (userLocalstorage) {
-      // TODO:check if token didnt expire
-      // const { user, jwt } = JSON.parse(userLocalstorage);
-      setUser(JSON.parse(userLocalstorage).user);
+      const { user, token } = JSON.parse(userLocalstorage);
+
+      if (!token) {
+        clearUserData();
+      }
+
+      const parsedToken = JSON.parse(atob(token.split(".")[1]));
+
+      if (parsedToken.exp * 1000 < new Date()) {
+        clearUserData();
+      } else {
+        setUser(user);
+      }
     }
   }, []);
-
-  console.log("user => ", user);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
