@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { AppContext } from "../contexts/AppContext";
-import { useAuthContext } from "../hooks/useAuthContext";
 
 export const socket = io.connect("http://localhost:3001");
 

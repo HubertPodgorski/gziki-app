@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
 import { Box, Button, Chip, IconButton, Typography } from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
@@ -13,8 +13,18 @@ import DogChipsGrid from "../../components/DogChipsGrid";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { socket } from "../../components/SocketHandler";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { FormProvider, useForm } from "react-hook-form";
+import { AppContext } from "../../contexts/AppContext";
+import FormSelect from "../../components/inputs/FormSelect";
+import tasks from "../userPanel/Tasks";
 
 const Tasks = () => {
+  const { events, tasks } = useContext(AppContext);
+
+  const formMethods = useForm({
+    defaultValues: { event: [] },
+  });
+
   const mappedTasks = useGetMappedTasks(true);
   const maxRowIndex = useGetMaxRowIndex(mappedTasks);
 
@@ -73,8 +83,56 @@ const Tasks = () => {
     );
   };
 
+  const selectedEvent = formMethods.watch("event");
+  const selectedEventDogs = useMemo(() => {
+    if (!selectedEvent) return [];
+
+    const event = events.find(({ _id }) => _id === selectedEvent);
+
+    if (!event) return [];
+
+    return event.dogs;
+  }, [selectedEvent]);
+
+  const isDogPlanned = useCallback(
+    (dogId) =>
+      tasks.some(({ dogs }) =>
+        dogs.some(({ _id: taskDogId }) => dogId === taskDogId)
+      ),
+    [selectedEventDogs, tasks]
+  );
+
   return (
     <Box>
+      <Box sx={{ padding: 2 }}>
+        <FormProvider {...formMethods}>
+          <FormSelect
+            multi={false}
+            name="event"
+            label="Event"
+            options={[
+              { value: "", label: "Brak" },
+              ...events.map(({ name: label, _id: value }) => ({
+                value,
+                label,
+              })),
+            ]}
+          />
+        </FormProvider>
+      </Box>
+
+      {selectedEventDogs.length > 0 && (
+        <DogChipsGrid sx={{ padding: 2 }}>
+          {selectedEventDogs.map(({ _id, name }) => (
+            <Chip
+              label={name}
+              key={_id}
+              color={isDogPlanned(_id) ? "success" : "error"}
+            />
+          ))}
+        </DogChipsGrid>
+      )}
+
       <DragDropContext onDragEnd={onDragEnd}>
         <TasksMainGrid>
           {Object.entries(mappedTasks).map(([rowIndex, columns], index) => (

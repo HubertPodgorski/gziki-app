@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
-const FormSelect = ({ options, name, label }) => {
+const FormSelect = ({ options, name, label, multi = true }) => {
   const { control } = useFormContext();
 
   const generateSelectOptions = useCallback(() => {
@@ -22,7 +22,12 @@ const FormSelect = ({ options, name, label }) => {
       render={({ field: { onChange, value } }) => (
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">{label}</InputLabel>
-          <Select onChange={onChange} value={value} label={label} multiple>
+          <Select
+            onChange={onChange}
+            value={value}
+            label={label}
+            multiple={multi}
+          >
             {generateSelectOptions()}
           </Select>
         </FormControl>

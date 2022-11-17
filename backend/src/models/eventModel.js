@@ -9,6 +9,7 @@ const eventSchema = new Schema(
     name: { type: String, required: true },
     dogs: {
       type: [DogModel.schema],
+      unique: false,
     },
   },
   {

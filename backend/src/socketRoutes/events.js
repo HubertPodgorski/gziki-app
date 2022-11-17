@@ -4,6 +4,7 @@ const {
   getEventById,
   deleteEventById,
   updateEventById,
+  toggleEventDog,
 } = require("../controllers/eventController");
 
 const routes = (io, socket) => {
@@ -22,6 +23,8 @@ const routes = (io, socket) => {
   socket.on("update_event", (received, callback) =>
     updateEventById(received, callback, io)
   );
+
+  socket.on("toggle_event_dog", (received) => toggleEventDog(received, io));
 };
 
 module.exports = routes;
