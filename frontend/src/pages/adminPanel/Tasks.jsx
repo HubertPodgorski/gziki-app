@@ -17,6 +17,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { AppContext } from "../../contexts/AppContext";
 import FormSelect from "../../components/inputs/FormSelect";
 import tasks from "../userPanel/Tasks";
+import DogChipsWrappable from "../../components/DogChipsWrappable";
 
 const Tasks = () => {
   const { events, tasks } = useContext(AppContext);
@@ -122,7 +123,7 @@ const Tasks = () => {
       </Box>
 
       {selectedEventDogs.length > 0 && (
-        <DogChipsGrid sx={{ padding: 2 }}>
+        <DogChipsWrappable sx={{ padding: 2 }}>
           {selectedEventDogs.map(({ _id, name }) => (
             <Chip
               label={name}
@@ -130,7 +131,7 @@ const Tasks = () => {
               color={isDogPlanned(_id) ? "success" : "error"}
             />
           ))}
-        </DogChipsGrid>
+        </DogChipsWrappable>
       )}
 
       <DragDropContext onDragEnd={onDragEnd}>

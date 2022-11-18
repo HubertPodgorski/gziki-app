@@ -14,7 +14,7 @@ const FormModal = ({ children, open, onClose, title }) => (
   <Dialog open={open} onClose={onClose}>
     <DialogTitle>{title}</DialogTitle>
 
-    <DialogContent sx={{ minWidth: 500 }}>{children}</DialogContent>
+    <DialogContent sx={{ minWidth: 400 }}>{children}</DialogContent>
   </Dialog>
 );
 

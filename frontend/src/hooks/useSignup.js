@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { userPaths } from "../helpers/routesAndPaths";
 import { useNavigate } from "react-router-dom";
+import { apiSuffix } from "../helpers/apiCall";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
@@ -19,7 +20,10 @@ export const useSignup = () => {
       name,
     };
 
-    const { data: responseData } = await axios.post("/users/signup", data);
+    const { data: responseData } = await axios.post(
+      `${apiSuffix}/users/signup`,
+      data
+    );
 
     localStorage.setItem("user", JSON.stringify(responseData));
     login(responseData.user);

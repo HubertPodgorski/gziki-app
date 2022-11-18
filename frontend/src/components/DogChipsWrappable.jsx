@@ -2,15 +2,14 @@ import React from "react";
 import PetsIcon from "@mui/icons-material/Pets";
 import { Box, useTheme } from "@mui/material";
 
-const DogChipsGrid = ({ children, sx = {} }) => {
+const DogChipsWrappable = ({ children, sx = {} }) => {
   const theme = useTheme();
 
   return (
     <Box
       sx={{
-        overflowX: "scroll",
-        display: "grid",
-        gridAutoFlow: "column",
+        display: "flex",
+        flexWrap: "wrap",
         gridGap: theme.spacing(1),
         alignItems: "center",
         justifyItems: "center",
@@ -24,4 +23,4 @@ const DogChipsGrid = ({ children, sx = {} }) => {
   );
 };
 
-export default DogChipsGrid;
+export default DogChipsWrappable;

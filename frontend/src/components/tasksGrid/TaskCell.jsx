@@ -8,7 +8,7 @@ const CardContentStyled = styled(CardContent)(({ theme }) => ({
   gridAutoFlow: "row",
   padding: theme.spacing(1),
   gridGap: theme.spacing(2),
-  height: "112px",
+  minHeight: "112px",
   alignItems: "center",
   position: "relative",
 }));

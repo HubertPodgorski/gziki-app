@@ -9,6 +9,7 @@ import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
 import DogChipsGrid from "../../components/DogChipsGrid";
+import DogChipsWrappable from "../../components/DogChipsWrappable";
 
 // TODO: style me later
 const Tasks = () => {
@@ -25,11 +26,11 @@ const Tasks = () => {
                   <Typography variant="h5">{item.description}</Typography>
 
                   {item.dogs.length > 0 && (
-                    <DogChipsGrid>
+                    <DogChipsWrappable>
                       {item.dogs.map(({ name, _id }) => (
                         <Chip label={name} key={_id} />
                       ))}
-                    </DogChipsGrid>
+                    </DogChipsWrappable>
                   )}
 
                   {item.dogs.length === 0 && (

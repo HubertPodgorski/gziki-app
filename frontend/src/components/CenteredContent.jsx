@@ -6,7 +6,7 @@ const CenteredContent = ({ children }) => {
     <Paper
       sx={{
         top: 2,
-        minWidth: 500,
+        minWidth: 400,
         padding: 2,
         height: "fit-content",
       }}

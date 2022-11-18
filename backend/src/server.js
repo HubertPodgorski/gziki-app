@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST", "PATCH", "DELETE"],
   },
 });
@@ -45,7 +45,7 @@ mongoose
     console.log("Connected to DB");
 
     // app listener
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log(`Listening on port ${process.env.PORT}`);
     });
   })
@@ -72,10 +72,6 @@ io.on("connection", (socket) => {
   eventsSocketRoutes(io, socket);
   usersSocketRoutes(io, socket);
   tasksSocketRoutes(io, socket);
-});
-
-server.listen(process.env.SOCKET_PORT, () => {
-  console.log(`Listening socket on port ${process.env.SOCKET_PORT}`);
 });
 
 // TODO: later create WS emit message "error" and every time somethings is invalid emit that message with error test

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { AppContext } from "../contexts/AppContext";
 
-export const socket = io.connect("http://localhost:3001");
+export const socket = io.connect(process.env.REACT_APP_HTTPS_PROXY);
 
 const SocketHandler = () => {
   const { setTasks, setDogs, setEvents, setUsers } = useContext(AppContext);
