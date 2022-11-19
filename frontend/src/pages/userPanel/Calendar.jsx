@@ -33,6 +33,11 @@ const Calendar = () => {
         gridAutoFlow: "row",
         gridGap: theme.spacing(2),
         padding: theme.spacing(2),
+
+        [theme.breakpoints.down("md")]: {
+          padding: theme.spacing(1),
+          gridGap: theme.spacing(1),
+        },
       }}
     >
       {events.map(({ _id, name, date, dogs }) => (
@@ -43,6 +48,11 @@ const Calendar = () => {
             display: "grid",
             gridAutoFlow: "rows",
             gridGap: theme.spacing(2),
+
+            [theme.breakpoints.down("md")]: {
+              padding: theme.spacing(1),
+              gridGap: theme.spacing(1),
+            },
           }}
         >
           <Typography variant="h5">{name}</Typography>

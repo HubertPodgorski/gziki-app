@@ -1,6 +1,13 @@
 import React, { useCallback, useContext, useMemo } from "react";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
-import { Box, Button, Chip, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
 import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
@@ -9,17 +16,16 @@ import { DragDropContext } from "react-beautiful-dnd";
 import TaskForm from "../forms/TaskForm";
 import { useGetMaxRowIndex } from "../../hooks/useGetMaxRowIndex";
 import { getMappedItemsToUpdate } from "../../helpers/dragNDrop";
-import DogChipsGrid from "../../components/DogChipsGrid";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { socket } from "../../components/SocketHandler";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FormProvider, useForm } from "react-hook-form";
 import { AppContext } from "../../contexts/AppContext";
 import FormSelect from "../../components/inputs/FormSelect";
-import tasks from "../userPanel/Tasks";
 import DogChipsWrappable from "../../components/DogChipsWrappable";
 
 const Tasks = () => {
+  const theme = useTheme();
   const { events, tasks } = useContext(AppContext);
 
   const formMethods = useForm({
@@ -105,7 +111,14 @@ const Tasks = () => {
 
   return (
     <Box>
-      <Box sx={{ padding: 2 }}>
+      <Box
+        sx={{
+          padding: 2,
+          [theme.breakpoints.down("md")]: {
+            padding: theme.spacing(1),
+          },
+        }}
+      >
         <FormProvider {...formMethods}>
           <FormSelect
             multi={false}
@@ -123,7 +136,14 @@ const Tasks = () => {
       </Box>
 
       {selectedEventDogs.length > 0 && (
-        <DogChipsWrappable sx={{ padding: 2 }}>
+        <DogChipsWrappable
+          sx={{
+            padding: 2,
+            [theme.breakpoints.down("md")]: {
+              padding: theme.spacing(1),
+            },
+          }}
+        >
           {selectedEventDogs.map(({ _id, name }) => (
             <Chip
               label={name}
@@ -171,11 +191,11 @@ const Tasks = () => {
                         <Typography variant="h5">{item.description}</Typography>
 
                         {item.dogs.length > 0 && (
-                          <DogChipsGrid>
+                          <DogChipsWrappable>
                             {item.dogs.map(({ name, _id }) => (
                               <Chip label={name} key={_id} />
                             ))}
-                          </DogChipsGrid>
+                          </DogChipsWrappable>
                         )}
 
                         {item.dogs.length === 0 && (

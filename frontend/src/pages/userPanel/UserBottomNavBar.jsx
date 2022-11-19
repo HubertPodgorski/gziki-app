@@ -21,28 +21,19 @@ const UserBottomNavBar = () => {
       sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
       elevation={3}
     >
-      <BottomNavigation showLabels>
+      <BottomNavigation sx={{ alignItems: "center" }} showLabels>
         <Link to={userRoutes.tasks}>
-          <BottomNavigationAction
-            label="Lista"
-            icon={<FormatListNumberedIcon />}
-          />
+          <BottomNavigationAction icon={<FormatListNumberedIcon />} />
         </Link>
 
         <Link to={userRoutes.calendar}>
-          <BottomNavigationAction
-            label="Treningi"
-            icon={<CalendarMonthIcon />}
-          />
+          <BottomNavigationAction icon={<CalendarMonthIcon />} />
         </Link>
 
         {/*TODO: show it only if has admin rights*/}
         {isAdmin && (
           <Link to={adminRoutes.main}>
-            <BottomNavigationAction
-              label="Panel zarządzania"
-              icon={<AdminPanelSettingsIcon />}
-            />
+            <BottomNavigationAction icon={<AdminPanelSettingsIcon />} />
           </Link>
         )}
       </BottomNavigation>

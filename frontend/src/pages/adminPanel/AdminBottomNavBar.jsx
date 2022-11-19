@@ -19,39 +19,25 @@ import HomeIcon from "@mui/icons-material/Home";
 // TODO: change to app bar from MUI
 const UserBottomNavBar = () => (
   <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
-    <BottomNavigation showLabels>
-      {/*Change context based on location?*/}
-      {/*If in admin panel show - list/calendar/admin-panel-section*/}
-
-      {/*If in tasks show also add task?*/}
-      {/*If in dogs show add dog?*/}
-
+    <BottomNavigation showLabels sx={{ alignItems: "center" }}>
       <Link to={userRoutes.main}>
-        <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-      </Link>
-
-      {/*TODO:change me to correct icons and labels*/}
-      <Link to={adminRoutes.pickData}>
-        <BottomNavigationAction label="PickData" icon={<WindowIcon />} />
+        <BottomNavigationAction icon={<HomeIcon />} />
       </Link>
 
       <Link to={adminRoutes.tasks}>
-        <BottomNavigationAction
-          label="Zadania"
-          icon={<FormatListBulletedIcon />}
-        />
+        <BottomNavigationAction icon={<FormatListBulletedIcon />} />
       </Link>
 
       <Link to={adminRoutes.dogs}>
-        <BottomNavigationAction label="Psy" icon={<PetsIcon />} />
+        <BottomNavigationAction icon={<PetsIcon />} />
       </Link>
 
       <Link to={adminRoutes.events}>
-        <BottomNavigationAction label="Treningi" icon={<CalendarMonthIcon />} />
+        <BottomNavigationAction icon={<CalendarMonthIcon />} />
       </Link>
 
       <Link to={adminRoutes.users}>
-        <BottomNavigationAction label="Ludzie" icon={<PersonIcon />} />
+        <BottomNavigationAction icon={<PersonIcon />} />
       </Link>
     </BottomNavigation>
   </Paper>

@@ -3,7 +3,7 @@ import { Box, Card, CardContent, useTheme } from "@mui/material";
 import { Draggable } from "react-beautiful-dnd";
 import { styled } from "@mui/material/styles";
 
-const CardContentStyled = styled(CardContent)(({ theme }) => ({
+const CardContentStyled = styled(Box)(({ theme }) => ({
   display: "grid",
   gridAutoFlow: "row",
   padding: theme.spacing(1),
@@ -11,6 +11,9 @@ const CardContentStyled = styled(CardContent)(({ theme }) => ({
   minHeight: "112px",
   alignItems: "center",
   position: "relative",
+  [theme.breakpoints.down("md")]: {
+    gridGap: theme.spacing(1),
+  },
 }));
 
 const TaskCell = ({ children, adminPanel, id, index, onClick }) => {

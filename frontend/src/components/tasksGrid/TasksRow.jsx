@@ -13,6 +13,10 @@ const TasksRow = ({ children, rowIndex, userPanel }) => {
         gridTemplateColumns: "1fr 1fr",
         border: userPanel ? "1px solid #ddd" : "none",
         borderRadius: "6px",
+
+        [theme.breakpoints.down("md")]: {
+          gridGap: theme.spacing(1),
+        },
       }}
     >
       {children}

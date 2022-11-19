@@ -12,7 +12,6 @@ import AdminPanel from "./pages/adminPanel/AdminPanel";
 import Tasks from "./pages/userPanel/Tasks";
 import AdminTasks from "./pages/adminPanel/Tasks";
 import Calendar from "./pages/userPanel/Calendar";
-import PickData from "./pages/adminPanel/PickData";
 import Users from "./pages/adminPanel/Users";
 import Dogs from "./pages/adminPanel/Dogs";
 import Events from "./pages/adminPanel/Events";
@@ -44,9 +43,7 @@ const Router = () => {
 
           {isAdmin && (
             <Route path={"admin-panel"} element={<AdminPanel />}>
-              <Route index element={<PickData />} />
-
-              <Route path={"pick-data"} element={<PickData />} />
+              <Route index element={<AdminTasks />} />
 
               <Route path={adminPaths.tasks} element={<AdminTasks />} />
               <Route path={adminPaths.users} element={<Users />} />

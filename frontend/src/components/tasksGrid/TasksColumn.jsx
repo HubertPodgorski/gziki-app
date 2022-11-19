@@ -15,6 +15,10 @@ const TasksColumn = ({ children, columnIndex, adminPanel, rowIndex }) => {
     border: adminPanel ? "1px solid #ddd" : "none",
     padding: theme.spacing(2),
     borderRadius: "6px",
+
+    [theme.breakpoints.down("md")]: {
+      padding: theme.spacing(1),
+    },
   }));
 
   if (!adminPanel)

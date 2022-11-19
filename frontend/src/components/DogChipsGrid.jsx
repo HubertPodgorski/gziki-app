@@ -16,6 +16,9 @@ const DogChipsGrid = ({ children, sx = {} }) => {
         justifyItems: "center",
         gridAutoColumns: "max-content",
         ...sx,
+        [theme.breakpoints.down("md")]: {
+          padding: theme.spacing(2, 0),
+        },
       }}
     >
       <PetsIcon />
