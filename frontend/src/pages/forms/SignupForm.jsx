@@ -1,5 +1,12 @@
 import React, { useMemo } from "react";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
@@ -14,6 +21,8 @@ import {
 import { useSignup } from "../../hooks/useSignup";
 
 const SignupForm = () => {
+  const theme = useTheme();
+
   const navigate = useNavigate();
   const { signup, loading } = useSignup();
 
@@ -45,24 +54,24 @@ const SignupForm = () => {
               required
             />
 
-            <FormButtonsGrid>
-              <Button
-                size="medium"
-                variant="contained"
-                onClick={() => navigate(notAuthenticatedRoutes.login)}
-              >
-                Login
-              </Button>
-
+            <Box sx={{ display: "grid", gridGap: theme.spacing(2) }}>
               <Button
                 disabled={loading}
                 size="medium"
                 variant="contained"
                 onClick={handleSubmit(onSubmit)}
               >
-                Submit
+                Signup
               </Button>
-            </FormButtonsGrid>
+
+              <Button
+                size="small"
+                variant="text"
+                onClick={() => navigate(notAuthenticatedRoutes.login)}
+              >
+                Login
+              </Button>
+            </Box>
           </FormGrid>
         </CardContent>
       </Card>

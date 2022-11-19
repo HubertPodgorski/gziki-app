@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo } from "react";
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
@@ -14,6 +21,8 @@ import {
 import { useLogin } from "../../hooks/useLogin";
 
 const LoginForm = () => {
+  const theme = useTheme();
+
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const { login, loading, error } = useLogin();
@@ -50,26 +59,26 @@ const LoginForm = () => {
               required
             />
 
-            <FormButtonsGrid>
-              <Button
-                size="medium"
-                variant="contained"
-                onClick={() => {
-                  navigate(notAuthenticatedRoutes.signup);
-                }}
-              >
-                Signup
-              </Button>
-
+            <Box sx={{ display: "grid", gridGap: theme.spacing(2) }}>
               <Button
                 disabled={loading}
                 size="medium"
                 variant="contained"
                 onClick={handleSubmit(onSubmit)}
               >
-                Submit
+                Login
               </Button>
-            </FormButtonsGrid>
+
+              <Button
+                size="small"
+                variant="text"
+                onClick={() => {
+                  navigate(notAuthenticatedRoutes.signup);
+                }}
+              >
+                Signup
+              </Button>
+            </Box>
           </FormGrid>
         </CardContent>
       </Card>
