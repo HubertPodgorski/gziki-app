@@ -6,9 +6,11 @@ const WrapperStyled = styled(Box)(({ theme }) => ({
   gridGap: theme.spacing(2),
   gridTemplateColumns: "1fr 1fr",
   borderRadius: "6px",
+  padding: theme.spacing(2),
 
   [theme.breakpoints.down("md")]: {
     gridGap: theme.spacing(1),
+    padding: theme.spacing(1),
   },
 }));
 
