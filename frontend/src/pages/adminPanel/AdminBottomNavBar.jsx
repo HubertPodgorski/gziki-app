@@ -79,7 +79,7 @@ const UserBottomNavBar = () => {
           }}
         >
           <CalendarMonthIcon />
-          <ListItemText primary="Calendar" />
+          <ListItemText primary="Events" />
         </MenuListItemStyled>
 
         <MenuListItemStyled
