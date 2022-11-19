@@ -7,7 +7,7 @@ export const getNewAndOldPositionIndexes = (destination, source) => {
 
   const [oldRowIndexString, oldColumnIndexString] =
     source.droppableId.split("_");
-  const oldCellIndex = destination.index;
+  const oldCellIndex = source.index;
   const oldColumnIndex = +oldColumnIndexString;
   const oldRowIndex = +oldRowIndexString;
 
@@ -24,6 +24,34 @@ export const getNewAndOldPositionIndexes = (destination, source) => {
     },
   };
 };
+
+const removeDuplicates = (currentList, item) => {
+  const foundItem = currentList.find(({ _id }) => _id === item._id);
+
+  if (foundItem) return currentList;
+
+  return [...currentList, item];
+};
+
+const updateTasksWithCurrentIndex =
+  (newColumnIndex, newRowIndex, draggableId) =>
+  ({ _id, position }, index) => {
+    if (_id === draggableId) {
+      return {
+        _id,
+        position: {
+          columnIndex: newColumnIndex,
+          rowIndex: newRowIndex,
+          positionIndex: index,
+        },
+      };
+    }
+
+    return {
+      _id,
+      position: { ...position, positionIndex: index },
+    };
+  };
 
 export const getMappedItemsToUpdate = (
   destination,
@@ -44,11 +72,17 @@ export const getMappedItemsToUpdate = (
     },
   } = getNewAndOldPositionIndexes(destination, source);
 
+  // clone data because of mutations ahead
   const newColumnTasks = [...mappedTasks[newRowIndex][newColumnIndex]];
 
+  // placeholder for data
   let itemsToUpdate = [];
 
   if (destination.droppableId === source.droppableId) {
+    // remove task at old index
+    newColumnTasks.splice(oldCellIndex, 1);
+
+    // add task with new position data at new index
     newColumnTasks.splice(newCellIndex, 0, {
       _id: draggableId,
       position: {
@@ -58,12 +92,14 @@ export const getMappedItemsToUpdate = (
       },
     });
 
-    itemsToUpdate = [...newColumnTasks];
+    itemsToUpdate = newColumnTasks;
   } else {
     const oldColumnTasks = [...mappedTasks[oldRowIndex][oldColumnIndex]];
 
+    // remove task at old index
     oldColumnTasks.splice(oldCellIndex, 1);
 
+    // add task with changed values at new index
     newColumnTasks.splice(newCellIndex, 0, {
       _id: draggableId,
       position: {
@@ -77,28 +113,6 @@ export const getMappedItemsToUpdate = (
   }
 
   return itemsToUpdate
-    .reduce((currentList, item) => {
-      const foundItem = currentList.find(({ _id }) => _id === item._id);
-
-      if (foundItem) return currentList;
-
-      return [...currentList, item];
-    }, [])
-    .map(({ _id, position }, index) => {
-      if (_id === draggableId) {
-        return {
-          _id,
-          position: {
-            columnIndex: newColumnIndex,
-            rowIndex: newRowIndex,
-            positionIndex: index,
-          },
-        };
-      }
-
-      return {
-        _id,
-        position: { ...position, positionIndex: index },
-      };
-    });
+    .reduce(removeDuplicates, [])
+    .map(updateTasksWithCurrentIndex(newColumnIndex, newRowIndex, draggableId));
 };
