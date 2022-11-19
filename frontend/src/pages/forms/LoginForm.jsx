@@ -45,7 +45,7 @@ const LoginForm = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <Card sx={{ width: "500px", margin: "20px auto" }}>
+      <Card sx={{ minWidth: 300, margin: "20px auto" }}>
         <CardContent>
           <FormGrid>
             <Typography variant="h4">Login</Typography>
