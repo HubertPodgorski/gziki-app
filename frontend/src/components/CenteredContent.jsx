@@ -1,7 +1,9 @@
 import React from "react";
-import { Paper } from "@mui/material";
+import { Paper, useTheme } from "@mui/material";
 
 const CenteredContent = ({ children }) => {
+  const theme = useTheme();
+
   return (
     <Paper
       sx={{
@@ -9,6 +11,12 @@ const CenteredContent = ({ children }) => {
         minWidth: 400,
         padding: 2,
         height: "fit-content",
+
+        [theme.breakpoints.down("md")]: {
+          padding: 1,
+          top: 1,
+          minWidth: 300,
+        },
       }}
     >
       {children}
