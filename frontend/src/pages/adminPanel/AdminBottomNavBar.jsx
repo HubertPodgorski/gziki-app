@@ -1,46 +1,150 @@
-import React, { useState } from "react";
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import ControlPointOutlinedIcon from "@mui/icons-material/ControlPointOutlined";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { Link } from "react-router-dom";
-import { adminRoutes, userRoutes } from "../../helpers/routesAndPaths";
+import React from "react";
+import {
+  AppBar,
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  Toolbar,
+  Typography,
+  styled,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import PetsIcon from "@mui/icons-material/Pets";
 import PersonIcon from "@mui/icons-material/Person";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import WindowIcon from "@mui/icons-material/Window";
 import HomeIcon from "@mui/icons-material/Home";
 
-// TODO: add correct button, redirect to calendar, panel and adding tasks
-// TODO: change to app bar from MUI
-const UserBottomNavBar = () => (
-  <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
-    <BottomNavigation showLabels sx={{ alignItems: "center" }}>
-      <Link to={userRoutes.main}>
-        <BottomNavigationAction icon={<HomeIcon />} />
-      </Link>
+import { useNavigate } from "react-router-dom";
+import { adminRoutes, userRoutes } from "../../helpers/routesAndPaths";
+import LoginLogoutListButton from "../../components/LoginLogoutListButton";
 
-      <Link to={adminRoutes.tasks}>
-        <BottomNavigationAction icon={<FormatListBulletedIcon />} />
-      </Link>
+const drawerWidth = 240;
 
-      <Link to={adminRoutes.dogs}>
-        <BottomNavigationAction icon={<PetsIcon />} />
-      </Link>
+const MenuListItemStyled = styled(ListItemButton)(() => ({
+  textAlign: "center",
+}));
 
-      <Link to={adminRoutes.events}>
-        <BottomNavigationAction icon={<CalendarMonthIcon />} />
-      </Link>
+const UserBottomNavBar = () => {
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-      <Link to={adminRoutes.users}>
-        <BottomNavigationAction icon={<PersonIcon />} />
-      </Link>
-    </BottomNavigation>
-  </Paper>
-);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        Go to
+      </Typography>
+
+      <Divider />
+
+      <List>
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(userRoutes.main);
+          }}
+        >
+          <HomeIcon />
+          <ListItemText primary="Home" />
+        </MenuListItemStyled>
+
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(adminRoutes.tasks);
+          }}
+        >
+          <FormatListBulletedIcon />
+          <ListItemText primary="Tasks" />
+        </MenuListItemStyled>
+
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(adminRoutes.dogs);
+          }}
+        >
+          <PetsIcon />
+          <ListItemText primary="Pets" />
+        </MenuListItemStyled>
+
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(adminRoutes.events);
+          }}
+        >
+          <CalendarMonthIcon />
+          <ListItemText primary="Calendar" />
+        </MenuListItemStyled>
+
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(adminRoutes.users);
+          }}
+        >
+          <PersonIcon />
+          <ListItemText primary="Users" />
+        </MenuListItemStyled>
+
+        <Divider />
+
+        <LoginLogoutListButton />
+      </List>
+    </Box>
+  );
+
+  const container =
+    window !== undefined ? () => window.document.body : undefined;
+
+  return (
+    <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0 }}>
+      <Box component="nav">
+        <Drawer
+          anchor="right"
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+
+      <Toolbar>
+        {/*<StyledFab color="secondary" aria-label="add">*/}
+        {/*  <AddIcon />*/}
+        {/*</StyledFab>*/}
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{
+            marginRight: 2,
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 export default UserBottomNavBar;

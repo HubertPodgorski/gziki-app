@@ -1,27 +1,26 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
-const TasksRow = ({ children, rowIndex, userPanel }) => {
-  const theme = useTheme();
+const WrapperStyled = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridGap: theme.spacing(2),
+  gridTemplateColumns: "1fr 1fr",
+  borderRadius: "6px",
 
-  return (
-    <Box
-      sx={{
-        gridRow: `${Number(rowIndex) + 1} / ${Number(rowIndex) + 2}`,
-        display: "grid",
-        gridGap: theme.spacing(2),
-        gridTemplateColumns: "1fr 1fr",
-        border: userPanel ? "1px solid #ddd" : "none",
-        borderRadius: "6px",
+  [theme.breakpoints.down("md")]: {
+    gridGap: theme.spacing(1),
+  },
+}));
 
-        [theme.breakpoints.down("md")]: {
-          gridGap: theme.spacing(1),
-        },
-      }}
-    >
-      {children}
-    </Box>
-  );
-};
+const TasksRow = ({ children, rowIndex, userPanel }) => (
+  <WrapperStyled
+    sx={{
+      gridRow: `${Number(rowIndex) + 1} / ${Number(rowIndex) + 2}`,
+      border: userPanel ? "1px solid #ddd" : "none",
+    }}
+  >
+    {children}
+  </WrapperStyled>
+);
 
 export default TasksRow;

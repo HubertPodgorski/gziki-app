@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import DogForm from "../forms/DogForm";
+import React, { useContext } from "react";
 import {
-  Button,
   IconButton,
   List,
   ListItem,
@@ -24,7 +22,6 @@ const Users = () => {
     formInitialData,
     editingId,
     formOpen,
-    setFormOpen,
     handleEditClick,
     handleFormClose,
   } = useFormHelpers({
@@ -38,8 +35,6 @@ const Users = () => {
 
   const onFormClose = () => {
     handleFormClose();
-
-    // TODO: maybe if success reload data?
   };
 
   const onEditClick = async ({ name, dogs }, id) => {
@@ -88,10 +83,6 @@ const Users = () => {
             </ListItem>
           ))}
         </List>
-
-        <Button variant="contained" onClick={() => setFormOpen(true)}>
-          Add
-        </Button>
       </CenteredContent>
 
       <UserForm

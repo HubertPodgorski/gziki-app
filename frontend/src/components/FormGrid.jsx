@@ -1,24 +1,17 @@
 import React from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
-const FormGrid = React.forwardRef(({ children }, ref) => {
-  const theme = useTheme();
+const WrapperStyled = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridAutoFlow: "row",
+  gridAutoRows: "auto",
+  gridGap: 16,
+  maxWidth: 500,
+  padding: theme.spacing(1, 0),
+}));
 
-  return (
-    <Box
-      ref={ref}
-      sx={{
-        display: "grid",
-        gridAutoFlow: "row",
-        gridAutoRows: "auto",
-        gridGap: 16,
-        maxWidth: 500,
-        padding: `${theme.spacing(1)} 0`,
-      }}
-    >
-      {children}
-    </Box>
-  );
-});
+const FormGrid = React.forwardRef(({ children }, ref) => (
+  <WrapperStyled ref={ref}>{children}</WrapperStyled>
+));
 
 export default FormGrid;

@@ -6,17 +6,17 @@ export const AuthContext = createContext({ user: null });
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const logout = () => {
+  const clearUserData = () => {
     setUser(null);
+    localStorage.removeItem("user");
+  };
+
+  const logout = () => {
+    clearUserData();
   };
 
   const login = (user) => {
     setUser(user);
-  };
-
-  const clearUserData = () => {
-    setUser(null);
-    localStorage.removeItem("user");
   };
 
   useEffect(() => {

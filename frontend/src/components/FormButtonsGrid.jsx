@@ -1,10 +1,14 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, styled } from "@mui/material";
+
+const WrapperStyled = styled(Box)(({ theme }) => ({
+  display: "grid",
+  gridGap: 16,
+  gridAutoFlow: "column",
+}));
 
 const FormButtonsGrid = ({ children, sx = {} }) => (
-  <Box sx={{ display: "grid", gridGap: 16, gridAutoFlow: "column", ...sx }}>
-    {children}
-  </Box>
+  <WrapperStyled sx={{ ...sx }}>{children}</WrapperStyled>
 );
 
 export default FormButtonsGrid;

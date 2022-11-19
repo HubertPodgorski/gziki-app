@@ -34,16 +34,16 @@ const Router = () => {
 
       {!!user && (
         <>
-          <Route path={"user-panel"} element={<UserPanel />}>
-            <Route index element={<Tasks />} />
+          <Route path={userPaths.root} element={<UserPanel />}>
+            <Route index element={<Navigate to={userPaths.tasks} />} />
 
-            <Route path={"tasks"} element={<Tasks />} />
-            <Route path={"calendar"} element={<Calendar />} />
+            <Route path={userPaths.tasks} element={<Tasks />} />
+            <Route path={userPaths.calendar} element={<Calendar />} />
           </Route>
 
           {isAdmin && (
-            <Route path={"admin-panel"} element={<AdminPanel />}>
-              <Route index element={<AdminTasks />} />
+            <Route path={adminPaths.root} element={<AdminPanel />}>
+              <Route index element={<Navigate to={adminPaths.tasks} />} />
 
               <Route path={adminPaths.tasks} element={<AdminTasks />} />
               <Route path={adminPaths.users} element={<Users />} />

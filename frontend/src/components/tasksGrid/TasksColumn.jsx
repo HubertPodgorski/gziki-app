@@ -1,7 +1,6 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import { Droppable } from "react-beautiful-dnd";
-import { styled } from "@mui/material/styles";
 
 const TasksColumn = ({ children, columnIndex, adminPanel, rowIndex }) => {
   const ColumnStyled = styled(Box)(({ theme }) => ({
