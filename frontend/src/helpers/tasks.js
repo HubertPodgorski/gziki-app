@@ -77,7 +77,5 @@ export const mapTasksForAdminPanel = (rawTasks) => {
   return newReducedTasks;
 };
 
-// export const sortTasksByPositionIndex = (tasks) => tasks.sort(
-//     (itemA, itemB) =>
-//         itemA.position.positionIndex < itemB.position.positionIndex
-// );
+export const isMyDog = (dogId, userDogs) =>
+  userDogs.some(({ _id }) => _id === dogId);

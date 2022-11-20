@@ -7,11 +7,11 @@ const CardContentStyled = styled(Box)(({ theme }) => ({
   gridAutoFlow: "row",
   padding: theme.spacing(1),
   gridGap: theme.spacing(2),
-  minHeight: "112px",
   alignItems: "center",
   position: "relative",
   [theme.breakpoints.down("md")]: {
-    gridGap: theme.spacing(1),
+    gridGap: theme.spacing(0.5),
+    padding: theme.spacing(0.5),
   },
 }));
 

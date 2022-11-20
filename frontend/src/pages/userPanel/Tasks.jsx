@@ -6,6 +6,7 @@ import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
 import ChipsGrid from "../../components/ChipsGrid";
+import UserTaskCell from "../../components/UserTaskCell";
 
 const Tasks = () => {
   const mappedTasks = useGetMappedTasks();
@@ -17,21 +18,7 @@ const Tasks = () => {
           {Object.entries(columns).map(([columnIndex, items]) => (
             <TasksColumn columnIndex={columnIndex} key={columnIndex}>
               {items.map((item, index) => (
-                <TaskCell index={index} id={item._id} key={item._id}>
-                  <Typography variant="h5">{item.description}</Typography>
-
-                  {item.dogs.length > 0 && (
-                    <ChipsGrid>
-                      {item.dogs.map(({ name, _id }) => (
-                        <Chip label={name} key={_id} />
-                      ))}
-                    </ChipsGrid>
-                  )}
-
-                  {item.dogs.length === 0 && (
-                    <Typography>No dogs selected</Typography>
-                  )}
-                </TaskCell>
+                <UserTaskCell item={item} key={item._id} index={index} />
               ))}
             </TasksColumn>
           ))}
