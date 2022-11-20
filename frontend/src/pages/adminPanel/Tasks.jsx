@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
 import {
   Box,
@@ -22,7 +22,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { FormProvider, useForm } from "react-hook-form";
 import { AppContext } from "../../contexts/AppContext";
 import FormSelect from "../../components/inputs/FormSelect";
-import DogChipsWrappable from "../../components/DogChipsWrappable";
+import ChipsGrid from "../../components/ChipsGrid";
 
 const Tasks = () => {
   const theme = useTheme();
@@ -101,6 +101,7 @@ const Tasks = () => {
   };
 
   const selectedEvent = formMethods.watch("event");
+
   const selectedEventDogs = useMemo(() => {
     if (!selectedEvent) return [];
 
@@ -109,14 +110,14 @@ const Tasks = () => {
     if (!event) return [];
 
     return event.dogs;
-  }, [selectedEvent]);
+  }, [selectedEvent, events]);
 
   const isDogPlanned = useCallback(
     (dogId) =>
       tasks.some(({ dogs }) =>
         dogs.some(({ _id: taskDogId }) => dogId === taskDogId)
       ),
-    [selectedEventDogs, tasks]
+    [tasks]
   );
 
   return (
@@ -146,14 +147,7 @@ const Tasks = () => {
       </Box>
 
       {selectedEventDogs.length > 0 && (
-        <DogChipsWrappable
-          sx={{
-            padding: 2,
-            [theme.breakpoints.down("md")]: {
-              padding: theme.spacing(1),
-            },
-          }}
-        >
+        <ChipsGrid>
           {selectedEventDogs.map(({ _id, name }) => (
             <Chip
               label={name}
@@ -161,7 +155,7 @@ const Tasks = () => {
               color={isDogPlanned(_id) ? "success" : "error"}
             />
           ))}
-        </DogChipsWrappable>
+        </ChipsGrid>
       )}
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -201,11 +195,11 @@ const Tasks = () => {
                         <Typography variant="h5">{item.description}</Typography>
 
                         {item.dogs.length > 0 && (
-                          <DogChipsWrappable>
+                          <ChipsGrid>
                             {item.dogs.map(({ name, _id }) => (
                               <Chip label={name} key={_id} />
                             ))}
-                          </DogChipsWrappable>
+                          </ChipsGrid>
                         )}
 
                         {item.dogs.length === 0 && (

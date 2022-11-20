@@ -1,17 +1,12 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Box, Chip, Typography } from "@mui/material";
-import { AppContext } from "../../contexts/AppContext";
-import { useNavigate } from "react-router-dom";
-import { mapTasks } from "../../helpers/tasks";
+import React from "react";
+import { Chip, Typography } from "@mui/material";
 import TasksMainGrid from "../../components/tasksGrid/TasksMainGrid";
 import TasksRow from "../../components/tasksGrid/TasksRow";
 import TasksColumn from "../../components/tasksGrid/TasksColumn";
 import TaskCell from "../../components/tasksGrid/TaskCell";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
-import DogChipsGrid from "../../components/DogChipsGrid";
-import DogChipsWrappable from "../../components/DogChipsWrappable";
+import ChipsGrid from "../../components/ChipsGrid";
 
-// TODO: style me later
 const Tasks = () => {
   const mappedTasks = useGetMappedTasks();
 
@@ -26,11 +21,11 @@ const Tasks = () => {
                   <Typography variant="h5">{item.description}</Typography>
 
                   {item.dogs.length > 0 && (
-                    <DogChipsWrappable>
+                    <ChipsGrid>
                       {item.dogs.map(({ name, _id }) => (
                         <Chip label={name} key={_id} />
                       ))}
-                    </DogChipsWrappable>
+                    </ChipsGrid>
                   )}
 
                   {item.dogs.length === 0 && (

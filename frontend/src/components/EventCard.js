@@ -1,7 +1,7 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext } from "react";
 import { Button, Card, Chip, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
-import DogChipsGrid from "./DogChipsGrid";
+import ChipsGrid from "./ChipsGrid";
 import FormButtonsGrid from "./FormButtonsGrid";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { socket } from "./SocketHandler";
@@ -60,7 +60,7 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
         {dayjs(date).format("DD/MM/YYYY HH:mm")}
       </Typography>
 
-      <DogChipsGrid>
+      <ChipsGrid>
         {allDogs.map(({ name, _id }) => (
           <Chip
             label={name}
@@ -71,9 +71,9 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
             }}
           />
         ))}
-      </DogChipsGrid>
+      </ChipsGrid>
 
-      <DogChipsGrid>
+      <ChipsGrid>
         {allUsers.map(({ name, _id }) => (
           <Chip
             label={name}
@@ -84,7 +84,7 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
             }}
           />
         ))}
-      </DogChipsGrid>
+      </ChipsGrid>
 
       {user.dogs.length > 0 && (
         <FormButtonsGrid sx={{ justifyContent: "flex-start" }}>

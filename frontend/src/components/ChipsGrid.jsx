@@ -3,24 +3,23 @@ import PetsIcon from "@mui/icons-material/Pets";
 import { Box, styled } from "@mui/material";
 
 const WrapperStyled = styled(Box)(({ theme }) => ({
-  overflowX: "scroll",
-  display: "grid",
-  gridAutoFlow: "column",
-  gridGap: theme.spacing(1),
+  display: "flex",
+  flexWrap: "wrap",
   alignItems: "center",
   justifyItems: "center",
-  gridAutoColumns: "max-content",
+  gridGap: theme.spacing(2),
 
   [theme.breakpoints.down("md")]: {
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(1, 0),
+    gridGap: theme.spacing(1),
   },
 }));
 
-const DogChipsGrid = ({ children, sx = {} }) => (
+const ChipsGrid = ({ children, sx = {} }) => (
   <WrapperStyled sx={{ ...sx }}>
     <PetsIcon />
     {children}
   </WrapperStyled>
 );
 
-export default DogChipsGrid;
+export default ChipsGrid;
