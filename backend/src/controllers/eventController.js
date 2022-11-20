@@ -1,4 +1,5 @@
 const EventModel = require("../models/eventModel");
+const UserModel = require("../models/userModel");
 const DogModel = require("../models/dogModel");
 
 const mongoose = require("mongoose");
@@ -124,6 +125,47 @@ const toggleEventDog = async (received, io) => {
   io.emit("events_updated", allEvents);
 };
 
+const toggleEventUserId = async (received, io) => {
+  const { _id, userId } = received;
+
+  // TODO: handle that
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
+
+  const event = await EventModel.findById(_id, "users");
+
+  if (!event) {
+    return;
+  }
+
+  const userAlreadyPresentInEvent = event.users.some(
+    ({ _id: currentUserId }) => currentUserId.toString() === userId
+  );
+
+  if (userAlreadyPresentInEvent) {
+    const updatedUsersList = event.users.filter(
+      ({ _id: currentUserId }) => currentUserId.toString() !== userId
+    );
+
+    await EventModel.findOneAndUpdate({ _id }, { users: updatedUsersList });
+  } else {
+    const user = await UserModel.findById(userId);
+
+    const updatedUsersList = [...event.users, user];
+
+    await EventModel.findOneAndUpdate({ _id }, { users: updatedUsersList });
+  }
+
+  // TODO: handle that
+  // if (!event) {
+  //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
+  // }
+
+  const allEvents = await EventModel.find({});
+  io.emit("events_updated", allEvents);
+};
+
 module.exports = {
   createEvent,
   getAllEvents,
@@ -131,4 +173,5 @@ module.exports = {
   deleteEventById,
   updateEventById,
   toggleEventDog,
+  toggleEventUserId,
 };

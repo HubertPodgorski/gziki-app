@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { Button, Card, Chip, Typography, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import DogChipsGrid from "./DogChipsGrid";
@@ -7,21 +7,35 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { socket } from "./SocketHandler";
 import { AppContext } from "../contexts/AppContext";
 
-const EventCard = ({ event: { _id, name, date, dogs } }) => {
-  const { dogs: allDogs } = useContext(AppContext);
+const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
+  const { dogs: allDogs, users: allUsers } = useContext(AppContext);
 
   const { user } = useAuthContext();
   const theme = useTheme();
 
   const isDogPresent = useCallback(
-    (_id, eventDogs) => {
-      return eventDogs.find(({ _id: currentDogId }) => currentDogId === _id);
+    (_id) => {
+      console.log("dogs => ", dogs);
+      return dogs.find(({ _id: currentDogId }) => currentDogId === _id);
     },
-    [allDogs]
+    [dogs]
   );
 
-  const onDogPresenceUpdateClick = (dogId, eventId) => {
-    socket.emit("toggle_event_dog", { dogId: dogId, _id: eventId });
+  const isUserPresent = useCallback(
+    (_id) => {
+      return users.find(
+        ({ _id: currentEventUserId }) => currentEventUserId === _id
+      );
+    },
+    [users]
+  );
+
+  const onDogPresenceUpdateClick = (dogId) => {
+    socket.emit("toggle_event_dog", { dogId, _id });
+  };
+
+  const onUserPresenceUpdateClick = () => {
+    socket.emit("toggle_event_user", { userId: user._id, _id });
   };
 
   return (
@@ -52,8 +66,21 @@ const EventCard = ({ event: { _id, name, date, dogs } }) => {
             label={name}
             key={_id}
             sx={{
-              background: isDogPresent(_id, dogs) ? "green" : "yellow",
-              color: isDogPresent(_id, dogs) ? "#fff" : "#333",
+              background: isDogPresent(_id) ? "green" : "yellow",
+              color: isDogPresent(_id) ? "#fff" : "#333",
+            }}
+          />
+        ))}
+      </DogChipsGrid>
+
+      <DogChipsGrid>
+        {allUsers.map(({ name, _id }) => (
+          <Chip
+            label={name}
+            key={_id}
+            sx={{
+              background: isUserPresent(_id) ? "green" : "yellow",
+              color: isUserPresent(_id) ? "#fff" : "#333",
             }}
           />
         ))}
@@ -65,8 +92,8 @@ const EventCard = ({ event: { _id, name, date, dogs } }) => {
             <Button
               variant="contained"
               key={dogId}
-              color={isDogPresent(dogId, dogs) ? "success" : "error"}
-              onClick={() => onDogPresenceUpdateClick(dogId, _id)}
+              color={isDogPresent(dogId) ? "success" : "error"}
+              onClick={() => onDogPresenceUpdateClick(dogId)}
               sx={{ minWidth: "150px" }}
             >
               {name}
@@ -74,6 +101,17 @@ const EventCard = ({ event: { _id, name, date, dogs } }) => {
           ))}
         </FormButtonsGrid>
       )}
+
+      <FormButtonsGrid sx={{ justifyContent: "flex-start" }}>
+        <Button
+          variant="contained"
+          color={isUserPresent(user._id) ? "success" : "error"}
+          onClick={() => onUserPresenceUpdateClick()}
+          sx={{ minWidth: "150px" }}
+        >
+          {user.name}
+        </Button>
+      </FormButtonsGrid>
     </Card>
   );
 };
