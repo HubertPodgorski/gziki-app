@@ -13,6 +13,7 @@ import {
 
 const DialogContentStyled = styled(DialogContent)(({ theme }) => ({
   minWidth: 400,
+  maxWidth: 600,
   [theme.breakpoints.down("md")]: {
     minWidth: 300,
     padding: theme.spacing(1),
@@ -28,19 +29,14 @@ const FormModal = ({ children, open, onClose, title }) => {
       onClose={onClose}
       sx={{
         [theme.breakpoints.down("md")]: {
-          margin: theme.spacing(1),
+          ".MuiDialog-paper": {
+            margin: theme.spacing(1),
+            width: "100%",
+          },
         },
       }}
     >
-      <DialogTitle
-        sx={{
-          [theme.breakpoints.down("md")]: {
-            padding: theme.spacing(1),
-          },
-        }}
-      >
-        {title}
-      </DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
 
       <DialogContentStyled>{children}</DialogContentStyled>
     </Dialog>
