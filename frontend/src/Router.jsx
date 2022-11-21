@@ -1,11 +1,9 @@
-import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import {
   adminPaths,
-  adminRoutes,
   notAuthenticatedRoutes,
   userPaths,
-  userRoutes,
 } from "./helpers/routesAndPaths";
 import UserPanel from "./pages/userPanel/UserPanel";
 import AdminPanel from "./pages/adminPanel/AdminPanel";
@@ -24,14 +22,14 @@ const Router = () => {
   const { user } = useAuthContext();
 
   const isAdmin = useIsAdmin();
+  const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem("initial-location", JSON.stringify(location));
+  }, []);
 
   return (
     <Routes>
-      <Route index element={<UserPanel />} />
-
-      <Route path={"/login"} element={<LoginForm />} />
-      <Route path={"/signup"} element={<SignupForm />} />
-
       {!!user && (
         <>
           <Route path={userPaths.root} element={<UserPanel />}>
@@ -53,6 +51,11 @@ const Router = () => {
           )}
         </>
       )}
+
+      <Route index element={<UserPanel />} />
+
+      <Route path={"/login"} element={<LoginForm />} />
+      <Route path={"/signup"} element={<SignupForm />} />
 
       <Route
         path="*"

@@ -14,10 +14,7 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
   const theme = useTheme();
 
   const isDogPresent = useCallback(
-    (_id) => {
-      console.log("dogs => ", dogs);
-      return dogs.find(({ _id: currentDogId }) => currentDogId === _id);
-    },
+    (_id) => dogs.find(({ _id: currentDogId }) => currentDogId === _id),
     [dogs]
   );
 

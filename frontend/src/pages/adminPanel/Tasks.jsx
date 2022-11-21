@@ -6,6 +6,7 @@ import {
   Chip,
   IconButton,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
@@ -34,6 +35,8 @@ const Tasks = () => {
 
   const mappedTasks = useGetMappedTasks(true);
   const maxRowIndex = useGetMaxRowIndex(mappedTasks);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
     editingId,
@@ -192,7 +195,9 @@ const Tasks = () => {
                           onEditClick(item);
                         }}
                       >
-                        <Typography variant="h5">{item.description}</Typography>
+                        <Typography variant={isMobile ? "body2" : "h5"}>
+                          {item.description}
+                        </Typography>
 
                         {item.dogs.length > 0 && (
                           <ChipsGrid>

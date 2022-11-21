@@ -12,7 +12,7 @@ import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
 import axios from "axios";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 import FormButtonsGrid from "../../components/FormButtonsGrid";
 import {
   notAuthenticatedRoutes,
@@ -25,11 +25,16 @@ const LoginForm = () => {
 
   const { user } = useAuthContext();
   const navigate = useNavigate();
+  const prevRoute = useLocation();
   const { login, loading, error } = useLogin();
 
   useEffect(() => {
+    const initialLocation = JSON.parse(
+      localStorage.getItem("initial-location")
+    );
+
     if (user) {
-      navigate(userPaths.tasks);
+      navigate(initialLocation?.pathname || userPaths.tasks);
     }
   }, [user]);
 

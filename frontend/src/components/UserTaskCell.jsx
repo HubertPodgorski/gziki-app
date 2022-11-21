@@ -12,7 +12,7 @@ const UserTaskCell = ({ item: { _id, dogs, description }, index }) => {
 
   return (
     <TaskCell index={index} id={_id} key={_id}>
-      <Typography variant={isMobile ? "h6" : "h5"}>{description}</Typography>
+      <Typography variant={isMobile ? "body2" : "h5"}>{description}</Typography>
 
       {dogs.length > 0 && (
         <ChipsGrid dense>
