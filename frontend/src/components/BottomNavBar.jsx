@@ -8,18 +8,21 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  styled,
   Toolbar,
   Typography,
-  styled,
 } from "@mui/material";
-import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import { useNavigate } from "react-router-dom";
-import { adminRoutes, userRoutes } from "../../helpers/routesAndPaths";
-import { useIsAdmin } from "../../hooks/useIsAdmin";
 import MenuIcon from "@mui/icons-material/Menu";
-import LoginLogoutListButton from "../../components/LoginLogoutListButton";
+import PetsIcon from "@mui/icons-material/Pets";
+import PersonIcon from "@mui/icons-material/Person";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
+import { useNavigate } from "react-router-dom";
+import { adminRoutes, userRoutes } from "../helpers/routesAndPaths";
+import LoginLogoutListButton from "./LoginLogoutListButton";
+import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
+import { useIsAdmin } from "../hooks/useIsAdmin";
 
 const drawerWidth = 240;
 
@@ -27,15 +30,15 @@ const MenuListItemStyled = styled(ListItemButton)(() => ({
   textAlign: "center",
 }));
 
-const UserBottomNavBar = () => {
-  const isAdmin = useIsAdmin();
-
+const BottomNavBar = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const isAdmin = useIsAdmin();
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -46,6 +49,8 @@ const UserBottomNavBar = () => {
       <Divider />
 
       <List>
+        {isAdmin && <MenuListItemStyled>User views</MenuListItemStyled>}
+
         <MenuListItemStyled
           onClick={() => {
             navigate(userRoutes.tasks);
@@ -63,13 +68,47 @@ const UserBottomNavBar = () => {
         </MenuListItemStyled>
 
         {isAdmin && (
-          <MenuListItemStyled
-            onClick={() => {
-              navigate(adminRoutes.main);
-            }}
-          >
-            <AdminPanelSettingsIcon /> <ListItemText primary="Admin panel" />
-          </MenuListItemStyled>
+          <>
+            <Divider />
+
+            <MenuListItemStyled>Admin views</MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.tasks);
+              }}
+            >
+              <FormatListBulletedIcon />
+              <ListItemText primary="Tasks" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.dogs);
+              }}
+            >
+              <PetsIcon />
+              <ListItemText primary="Pets" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.events);
+              }}
+            >
+              <CalendarMonthIcon />
+              <ListItemText primary="Events" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.users);
+              }}
+            >
+              <PersonIcon />
+              <ListItemText primary="Users" />
+            </MenuListItemStyled>
+          </>
         )}
 
         <Divider />
@@ -106,6 +145,10 @@ const UserBottomNavBar = () => {
       </Box>
 
       <Toolbar>
+        {/*<StyledFab color="secondary" aria-label="add">*/}
+        {/*  <AddIcon />*/}
+        {/*</StyledFab>*/}
+
         <Box sx={{ flexGrow: 1 }} />
 
         <IconButton
@@ -124,4 +167,4 @@ const UserBottomNavBar = () => {
   );
 };
 
-export default UserBottomNavBar;
+export default BottomNavBar;
