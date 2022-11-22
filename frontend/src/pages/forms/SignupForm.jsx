@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -27,10 +27,10 @@ const SignupForm = () => {
   const { signup, loading } = useSignup();
 
   const formMethods = useForm({
-    defaultValues: { name: "", password: "", email: "" },
+    defaultValues: { name: "", password: "", email: "", repeatPassword: "" },
   });
 
-  const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
+  const { handleSubmit, watch } = useMemo(() => formMethods, [formMethods]);
 
   const onSubmit = async ({ name, password, email }) => {
     await signup(name, email, password);
@@ -51,6 +51,20 @@ const SignupForm = () => {
               name="password"
               label="Password"
               type="password"
+              required
+            />
+
+            <FormTextField
+              name="repeatPassword"
+              label="Repeat password"
+              type="password"
+              rules={{
+                validate: (currentValue) => {
+                  if (watch("password") !== currentValue) {
+                    return "Passwords does not match";
+                  }
+                },
+              }}
               required
             />
 
