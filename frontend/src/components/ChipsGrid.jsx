@@ -1,6 +1,7 @@
 import React from "react";
 import PetsIcon from "@mui/icons-material/Pets";
 import { Box, styled, useTheme } from "@mui/material";
+import PeopleIcon from "@mui/icons-material/People";
 
 const WrapperStyled = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -15,7 +16,7 @@ const WrapperStyled = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ChipsGrid = ({ children, sx = {}, dense }) => {
+const ChipsGrid = ({ children, sx = {}, dense, people }) => {
   const theme = useTheme();
 
   return (
@@ -32,7 +33,7 @@ const ChipsGrid = ({ children, sx = {}, dense }) => {
           : {}),
       }}
     >
-      <PetsIcon />
+      {people ? <PeopleIcon /> : <PetsIcon />}
       {children}
     </WrapperStyled>
   );

@@ -24,6 +24,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { AppContext } from "../../contexts/AppContext";
 import FormSelect from "../../components/inputs/FormSelect";
 import ChipsGrid from "../../components/ChipsGrid";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const Tasks = () => {
   const theme = useTheme();
@@ -36,7 +37,7 @@ const Tasks = () => {
   const mappedTasks = useGetMappedTasks(true);
   const maxRowIndex = useGetMaxRowIndex(mappedTasks);
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
 
   const {
     editingId,

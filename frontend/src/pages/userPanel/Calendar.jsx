@@ -13,19 +13,6 @@ const Calendar = () => {
 
   const sortedEvents = useMemo(() => events.sort(sortByNewest), [events]);
 
-  const nextEvent = useMemo(() => {
-    if (!events || !events.length) return null;
-    const nextEventId = findNextEventId(events);
-
-    if (!nextEventId) return null;
-
-    const eventFound = events.find(({ _id }) => nextEventId === _id);
-
-    if (!eventFound) return null;
-
-    return eventFound;
-  }, [events]);
-
   return (
     <Box
       sx={{
@@ -40,14 +27,6 @@ const Calendar = () => {
         },
       }}
     >
-      {!!nextEvent && (
-        <>
-          <Typography variant="h5">Nearest next event</Typography>
-          <EventCard event={nextEvent} />
-          <Divider sx={{ margin: theme.spacing(2, 0) }} />
-        </>
-      )}
-
       {sortedEvents.map((event) => (
         <EventCard event={event} key={event._id} />
       ))}

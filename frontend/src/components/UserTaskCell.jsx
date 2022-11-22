@@ -4,10 +4,10 @@ import ChipsGrid from "./ChipsGrid";
 import TaskCell from "./tasksGrid/TaskCell";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { isMyDog } from "../helpers/tasks";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 const UserTaskCell = ({ item: { _id, dogs, description }, index }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useIsMobile();
   const { user } = useAuthContext();
 
   return (
