@@ -98,20 +98,43 @@ const toggleEventDog = async (received, io) => {
     return;
   }
 
-  const dogAlreadyPresentInEvent = event.dogs.some(
+  const dogFound = event.dogs.find(
     ({ _id: currentDogId }) => currentDogId.toString() === dogId
   );
 
-  if (dogAlreadyPresentInEvent) {
+  console.log("dogFound => ", dogFound);
+
+  console.log(
+    "dogFound && dogFound?.status === ABSENT => ",
+    dogFound && dogFound?.status === "ABSENT"
+  );
+  console.log(
+    "dogFound && dogFound?.status === PRESENT => ",
+    dogFound && dogFound?.status === "PRESENT"
+  );
+
+  if (dogFound && dogFound?.status === "PRESENT") {
+    const updatedDogsList = [
+      ...event.dogs.filter(
+        ({ _id: currentDogId }) => currentDogId.toString() !== dogId
+      ),
+      { _id: dogId, status: "ABSENT" },
+    ];
+
+    await EventModel.findOneAndUpdate({ _id }, { dogs: updatedDogsList });
+  } else if (dogFound && dogFound?.status === "ABSENT") {
     const updatedDogsList = event.dogs.filter(
       ({ _id: currentDogId }) => currentDogId.toString() !== dogId
     );
 
     await EventModel.findOneAndUpdate({ _id }, { dogs: updatedDogsList });
   } else {
-    const dog = await DogModel.findById(dogId);
-
-    const updatedDogsList = [...event.dogs, dog];
+    const updatedDogsList = [
+      ...event.dogs.filter(
+        ({ _id: currentDogId }) => currentDogId.toString() !== dogId
+      ),
+      { _id: dogId, status: "PRESENT" },
+    ];
 
     await EventModel.findOneAndUpdate({ _id }, { dogs: updatedDogsList });
   }
@@ -139,20 +162,39 @@ const toggleEventUserId = async (received, io) => {
     return;
   }
 
-  const userAlreadyPresentInEvent = event.users.some(
+  const userFound = event.users.find(
     ({ _id: currentUserId }) => currentUserId.toString() === userId
   );
 
-  if (userAlreadyPresentInEvent) {
-    const updatedUsersList = event.users.filter(
-      ({ _id: currentUserId }) => currentUserId.toString() !== userId
-    );
+  console.log("userFound => ", userFound);
+
+  // check if present and status === ABSENT = remove from list
+  // check if present and status === PRESENT = change to ABSENT
+  // else = change to PRESENT
+  if (userFound && userFound?.status === "PRESENT") {
+    const updatedUsersList = [
+      ...event.users.filter(
+        ({ _id: currentUserId }) => currentUserId.toString() !== userId
+      ),
+      { _id: userId, status: "ABSENT" },
+    ];
+
+    await EventModel.findOneAndUpdate({ _id }, { users: updatedUsersList });
+  } else if (userFound && userFound?.status === "ABSENT") {
+    const updatedUsersList = [
+      ...event.users.filter(
+        ({ _id: currentUserId }) => currentUserId.toString() !== userId
+      ),
+    ];
 
     await EventModel.findOneAndUpdate({ _id }, { users: updatedUsersList });
   } else {
-    const user = await UserModel.findById(userId);
-
-    const updatedUsersList = [...event.users, user];
+    const updatedUsersList = [
+      ...event.users.filter(
+        ({ _id: currentUserId }) => currentUserId.toString() !== userId
+      ),
+      { _id: userId, status: "PRESENT" },
+    ];
 
     await EventModel.findOneAndUpdate({ _id }, { users: updatedUsersList });
   }

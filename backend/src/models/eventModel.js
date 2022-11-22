@@ -9,11 +9,21 @@ const eventSchema = new Schema(
     date: { type: String, required: true },
     name: { type: String, required: true },
     dogs: {
-      type: [DogModel.schema],
+      type: [
+        {
+          status: { type: String },
+          _id: { type: String },
+        },
+      ],
       required: false,
     },
     users: {
-      type: [UserModel.schema],
+      type: [
+        {
+          status: { type: String },
+          _id: { type: String },
+        },
+      ],
       required: false,
     },
   },

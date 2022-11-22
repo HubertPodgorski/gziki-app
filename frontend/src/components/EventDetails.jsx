@@ -26,16 +26,52 @@ const EventDetails = ({ users, dogs, id }) => {
 
   const isMobile = useIsMobile();
 
-  const isDogPresent = useCallback(
-    (_id) => dogs.find(({ _id: currentDogId }) => currentDogId === _id),
+  const getDogColors = useCallback(
+    (_id) => {
+      const defaultColors = {
+        background: "yellow",
+        color: "#333",
+        button: "warning",
+      };
+
+      const dogFound = dogs.find(
+        ({ _id: currentDogId }) => currentDogId === _id
+      );
+
+      if (!dogFound) return defaultColors;
+
+      if (dogFound?.status === "PRESENT")
+        return { background: "green", color: "#fff", button: "success" };
+
+      if (dogFound?.status === "ABSENT")
+        return { background: "red", color: "#fff", button: "error" };
+
+      return defaultColors;
+    },
     [dogs]
   );
 
-  const isUserPresent = useCallback(
+  const getUserColors = useCallback(
     (_id) => {
-      return users.find(
+      const defaultColors = {
+        background: "yellow",
+        color: "#333",
+        button: "warning",
+      };
+
+      const userFound = users.find(
         ({ _id: currentEventUserId }) => currentEventUserId === _id
       );
+
+      if (!userFound) return defaultColors;
+
+      if (userFound?.status === "PRESENT")
+        return { background: "green", color: "#fff", button: "success" };
+
+      if (userFound?.status === "ABSENT")
+        return { background: "red", color: "#fff", button: "error" };
+
+      return defaultColors;
     },
     [users]
   );
@@ -90,29 +126,37 @@ const EventDetails = ({ users, dogs, id }) => {
         }}
       >
         <ChipsGrid>
-          {allDogs.map(({ name, _id }) => (
-            <Chip
-              label={name}
-              key={_id}
-              sx={{
-                background: isDogPresent(_id) ? "green" : "yellow",
-                color: isDogPresent(_id) ? "#fff" : "#333",
-              }}
-            />
-          ))}
+          {allDogs.map(({ name, _id }) => {
+            const { color, background } = getDogColors(_id);
+
+            return (
+              <Chip
+                label={name}
+                key={_id}
+                sx={{
+                  background,
+                  color,
+                }}
+              />
+            );
+          })}
         </ChipsGrid>
 
         <ChipsGrid people>
-          {allUsers.map(({ name, _id }) => (
-            <Chip
-              label={name}
-              key={_id}
-              sx={{
-                background: isUserPresent(_id) ? "green" : "yellow",
-                color: isUserPresent(_id) ? "#fff" : "#333",
-              }}
-            />
-          ))}
+          {allUsers.map(({ name, _id }) => {
+            const { background, color } = getUserColors(_id);
+
+            return (
+              <Chip
+                label={name}
+                key={_id}
+                sx={{
+                  background,
+                  color,
+                }}
+              />
+            );
+          })}
         </ChipsGrid>
 
         <Typography variant={isMobile ? "body2" : "body1"}>
@@ -125,7 +169,7 @@ const EventDetails = ({ users, dogs, id }) => {
               <Button
                 variant="contained"
                 key={dogId}
-                color={isDogPresent(dogId) ? "success" : "error"}
+                color={getDogColors(dogId).button}
                 onClick={() => onDogPresenceUpdateClick(dogId)}
                 sx={{ minWidth: "150px" }}
               >
@@ -142,7 +186,7 @@ const EventDetails = ({ users, dogs, id }) => {
         <FormButtonsGrid sx={{ justifyContent: "flex-start" }}>
           <Button
             variant="contained"
-            color={isUserPresent(user._id) ? "success" : "error"}
+            color={getUserColors(user._id).button}
             onClick={() => onUserPresenceUpdateClick()}
             sx={{ minWidth: "150px" }}
           >
