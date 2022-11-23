@@ -102,17 +102,6 @@ const toggleEventDog = async (received, io) => {
     ({ _id: currentDogId }) => currentDogId.toString() === dogId
   );
 
-  console.log("dogFound => ", dogFound);
-
-  console.log(
-    "dogFound && dogFound?.status === ABSENT => ",
-    dogFound && dogFound?.status === "ABSENT"
-  );
-  console.log(
-    "dogFound && dogFound?.status === PRESENT => ",
-    dogFound && dogFound?.status === "PRESENT"
-  );
-
   if (dogFound && dogFound?.status === "PRESENT") {
     const updatedDogsList = [
       ...event.dogs.filter(
@@ -166,11 +155,6 @@ const toggleEventUserId = async (received, io) => {
     ({ _id: currentUserId }) => currentUserId.toString() === userId
   );
 
-  console.log("userFound => ", userFound);
-
-  // check if present and status === ABSENT = remove from list
-  // check if present and status === PRESENT = change to ABSENT
-  // else = change to PRESENT
   if (userFound && userFound?.status === "PRESENT") {
     const updatedUsersList = [
       ...event.users.filter(
