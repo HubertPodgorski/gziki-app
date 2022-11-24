@@ -1,22 +1,16 @@
 import React, { useContext } from "react";
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Box, Chip, IconButton, List, ListItem, useTheme } from "@mui/material";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UserForm from "../forms/UserForm";
-import PetsIcon from "@mui/icons-material/Pets";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
+import ChipsGrid from "../../components/ChipsGrid";
 
 const Users = () => {
+  const theme = useTheme();
   const confirm = useConfirmModal();
   const { users } = useContext(AppContext);
 
@@ -60,19 +54,23 @@ const Users = () => {
               divider
               key={_id}
               onClick={() => onEditClick({ name, dogs }, _id)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
-              <ListItemButton>{name}</ListItemButton>
+              <Box>
+                {name}
 
-              {dogs.length > 0 && (
-                <>
-                  <ListItemIcon>
-                    <PetsIcon />
-                  </ListItemIcon>
-                  {dogs.map(({ name, _id }) => (
-                    <ListItemText key={_id}>{name}</ListItemText>
-                  ))}
-                </>
-              )}
+                {dogs.length > 0 && (
+                  <ChipsGrid>
+                    {dogs.map(({ name, _id }) => (
+                      <Chip label={name} key={_id} />
+                    ))}
+                  </ChipsGrid>
+                )}
+              </Box>
 
               <IconButton
                 color="error"

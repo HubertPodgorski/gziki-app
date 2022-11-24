@@ -2,9 +2,9 @@ import React from "react";
 import { Box, styled } from "@mui/material";
 
 const WrapperStyled = styled(Box)(({ theme }) => ({
-  display: "grid",
+  display: "flex",
   gridGap: 16,
-  gridAutoFlow: "column",
+  flexWrap: "wrap",
 }));
 
 const FormButtonsGrid = ({ children, sx = {} }) => (
