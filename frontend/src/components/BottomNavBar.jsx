@@ -93,6 +93,16 @@ const BottomNavBar = () => {
 
             <MenuListItemStyled
               onClick={() => {
+                navigate(adminRoutes.dogTasks);
+              }}
+            >
+              TODO: change me
+              <PetsIcon />
+              <ListItemText primary="Dog tasks" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
                 navigate(adminRoutes.events);
               }}
             >

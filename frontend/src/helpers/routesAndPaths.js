@@ -22,6 +22,7 @@ export const adminRoutes = {
   events: "/admin-panel/events",
   dogs: "/admin-panel/dogs",
   users: "/admin-panel/users",
+  dogTasks: "/admin-panel/dog-tasks",
 };
 
 export const adminPaths = {
@@ -31,4 +32,5 @@ export const adminPaths = {
   events: "events",
   dogs: "dogs",
   users: "users",
+  dogTasks: "dog-tasks",
 };

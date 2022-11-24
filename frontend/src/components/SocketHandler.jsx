@@ -5,7 +5,8 @@ import { AppContext } from "../contexts/AppContext";
 export const socket = io.connect(process.env.REACT_APP_HTTPS_PROXY);
 
 const SocketHandler = () => {
-  const { setTasks, setDogs, setEvents, setUsers } = useContext(AppContext);
+  const { setTasks, setDogs, setEvents, setUsers, setDogTasks } =
+    useContext(AppContext);
 
   useEffect(() => {
     socket.on("tasks_updated", (received) => {
@@ -22,6 +23,10 @@ const SocketHandler = () => {
 
     socket.on("events_updated", (received) => {
       setEvents(received);
+    });
+
+    socket.on("dog_tasks_updated", (received) => {
+      setDogTasks(received);
     });
 
     return () => {
@@ -44,6 +49,10 @@ const SocketHandler = () => {
 
     socket.emit("get_all_users", (users) => {
       setUsers(users);
+    });
+
+    socket.emit("get_all_dog_tasks", (dogTasks) => {
+      setDogTasks(dogTasks);
     });
   }, []);
 

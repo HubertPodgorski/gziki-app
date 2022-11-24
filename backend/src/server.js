@@ -4,6 +4,7 @@ const tasksSocketRoutes = require("./socketRoutes/tasks");
 const dogsSocketRoutes = require("./socketRoutes/dogs");
 const eventsSocketRoutes = require("./socketRoutes/events");
 const usersSocketRoutes = require("./socketRoutes/users");
+const dogTasksSocketRoutes = require("./socketRoutes/dogTasks");
 const usersRoutes = require("./routes/users");
 
 const jwt = require("jsonwebtoken");
@@ -72,6 +73,7 @@ io.on("connection", (socket) => {
   eventsSocketRoutes(io, socket);
   usersSocketRoutes(io, socket);
   tasksSocketRoutes(io, socket);
+  dogTasksSocketRoutes(io, socket);
 });
 
 // TODO: later create WS emit message "error" and every time somethings is invalid emit that message with error test
