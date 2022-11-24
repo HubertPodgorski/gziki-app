@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, Typography, useTheme } from "@mui/material";
-import dayjs from "dayjs";
 import { useIsMobile } from "../hooks/useIsMobile";
 import EventDetails from "./EventDetails";
+import { getFormattedDate } from "../helpers/calendar";
 
 const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
   const isMobile = useIsMobile();
@@ -30,8 +30,7 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
         variant={isMobile ? "body2" : "body1"}
         sx={{ textTransform: "uppercase" }}
       >
-        {dayjs(date).locale("pl").format("dddd")}{" "}
-        {dayjs(date).format("DD/MM/YYYY HH:mm")}
+        {getFormattedDate(date)}
       </Typography>
 
       <EventDetails users={users} dogs={dogs} id={_id} />

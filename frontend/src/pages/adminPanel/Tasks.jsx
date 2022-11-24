@@ -6,7 +6,6 @@ import {
   Chip,
   IconButton,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import TasksRow from "../../components/tasksGrid/TasksRow";
@@ -25,6 +24,7 @@ import { AppContext } from "../../contexts/AppContext";
 import FormSelect from "../../components/inputs/FormSelect";
 import ChipsGrid from "../../components/ChipsGrid";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import { getFormattedDate } from "../../helpers/calendar";
 
 const Tasks = () => {
   const theme = useTheme();
@@ -141,9 +141,9 @@ const Tasks = () => {
             label="Event"
             options={[
               { value: "", label: "Brak" },
-              ...events.map(({ name: label, _id: value }) => ({
+              ...events.map(({ name, _id: value, date }) => ({
                 value,
-                label,
+                label: `${name} ${getFormattedDate(date)}`,
               })),
             ]}
           />
