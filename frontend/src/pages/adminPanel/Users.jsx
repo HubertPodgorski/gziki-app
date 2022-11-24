@@ -14,8 +14,10 @@ import PetsIcon from "@mui/icons-material/Pets";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
+import { useConfirmModal } from "../../hooks/useConfirmModal";
 
 const Users = () => {
+  const confirm = useConfirmModal();
   const { users } = useContext(AppContext);
 
   const {
@@ -30,6 +32,8 @@ const Users = () => {
   });
 
   const onDeleteClick = async (id) => {
+    await confirm();
+
     socket.emit("delete_user", { _id: id });
   };
 

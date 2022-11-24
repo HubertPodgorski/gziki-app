@@ -7,24 +7,27 @@ import "dayjs/locale/pl";
 import SocketHandler from "./components/SocketHandler";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import BottomNavBar from "./components/BottomNavBar";
+import { ConfirmProvider } from "material-ui-confirm";
 
 const App = () => (
   <ThemeProvider theme={theme}>
-    <AuthContextProvider>
-      <AppContextProvider>
-        <SocketHandler />
+    <ConfirmProvider>
+      <AuthContextProvider>
+        <AppContextProvider>
+          <SocketHandler />
 
-        <CssBaseline />
+          <CssBaseline />
 
-        <BrowserRouter>
-          <Box sx={{ paddingBottom: 7 }}>
-            <Router />
+          <BrowserRouter>
+            <Box sx={{ paddingBottom: 7 }}>
+              <Router />
 
-            <BottomNavBar />
-          </Box>
-        </BrowserRouter>
-      </AppContextProvider>
-    </AuthContextProvider>
+              <BottomNavBar />
+            </Box>
+          </BrowserRouter>
+        </AppContextProvider>
+      </AuthContextProvider>
+    </ConfirmProvider>
   </ThemeProvider>
 );
 

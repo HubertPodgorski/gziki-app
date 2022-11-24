@@ -12,9 +12,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
+import { useConfirmModal } from "../../hooks/useConfirmModal";
 
 const Dogs = () => {
   const { dogs } = useContext(AppContext);
+  const confirm = useConfirmModal();
 
   const {
     formInitialData,
@@ -29,13 +31,13 @@ const Dogs = () => {
   });
 
   const onDeleteClick = async (id) => {
+    await confirm();
+
     socket.emit("delete_dog", { _id: id });
   };
 
   const onFormClose = () => {
     handleFormClose();
-
-    // TODO: maybe if success reload data?
   };
 
   const onEditClick = async ({ name }, id) => {

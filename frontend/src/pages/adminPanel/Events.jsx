@@ -13,8 +13,10 @@ import dayjs from "dayjs";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
+import { useConfirmModal } from "../../hooks/useConfirmModal";
 
 const Events = () => {
+  const confirm = useConfirmModal();
   const { events } = useContext(AppContext);
 
   const {
@@ -31,13 +33,13 @@ const Events = () => {
   });
 
   const onDeleteClick = async (id) => {
+    await confirm();
+
     socket.emit("delete_event", { _id: id });
   };
 
   const onFormClose = () => {
     handleFormClose();
-
-    // TODO: maybe if success reload data?
   };
 
   const onEditClick = async ({ name, date }, id) => {
