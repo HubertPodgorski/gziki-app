@@ -17,6 +17,7 @@ import PetsIcon from "@mui/icons-material/Pets";
 import PersonIcon from "@mui/icons-material/Person";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 import { useNavigate } from "react-router-dom";
 import { adminRoutes, userRoutes } from "../helpers/routesAndPaths";
@@ -96,8 +97,7 @@ const BottomNavBar = () => {
                 navigate(adminRoutes.dogTasks);
               }}
             >
-              TODO: change me
-              <PetsIcon />
+              <TextSnippetIcon />
               <ListItemText primary="Dog tasks" />
             </MenuListItemStyled>
 

@@ -5,7 +5,6 @@ import { TextField } from "@mui/material";
 const FormTextField = ({ name, label, required = false, type, rules = {} }) => {
   const { control } = useFormContext();
 
-  console.log("rules => ", rules);
   return (
     <Controller
       name={name}

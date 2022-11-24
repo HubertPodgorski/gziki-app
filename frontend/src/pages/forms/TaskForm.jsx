@@ -9,13 +9,16 @@ import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 
 const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
-  const { dogs } = useContext(AppContext);
+  const { dogs, dogTasks } = useContext(AppContext);
 
   const formMethods = useForm({
     defaultValues: initialData,
   });
 
-  const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
+  const { handleSubmit, reset, watch, setValue } = useMemo(
+    () => formMethods,
+    [formMethods]
+  );
 
   useEffect(() => {
     const { description, dogs, position } = initialData;
@@ -58,18 +61,39 @@ const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
     // TODO: error handling eventually?
   };
 
+  const dogTaskOptions = useMemo(
+    () => dogTasks.map(({ name }) => ({ value: name, label: name })),
+    [dogTasks]
+  );
+
+  const description = watch("description");
+
   return (
     <FormProvider {...formMethods}>
       <FormModal onClose={onClose} open={open} title="Task">
         <FormGrid>
-          <FormTextField name="description" label="Description" required />
+          <FormTextField
+            name="description"
+            label="Type task description"
+            required
+          />
+          <FormSelect
+            name="description"
+            value={description ? [description] : []}
+            onChange={(e) => {
+              if (e.target.value && e.target.value[0]) {
+                setValue("description", e.target.value[0]);
+              }
+            }}
+            label="Or select description"
+            options={dogTaskOptions}
+          />
 
           <FormSelect
             name="dogs"
             label="Dogs"
             options={dogs.map(({ name, _id }) => ({ value: _id, label: name }))}
           />
-
           <DialogActions sx={{ padding: 0 }}>
             <Button size="medium" variant="outlined" onClick={onClose}>
               Cancel

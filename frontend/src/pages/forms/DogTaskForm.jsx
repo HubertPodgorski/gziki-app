@@ -37,7 +37,7 @@ const DogTaskForm = ({ open, onClose, initialData, editingId }) => {
     <FormProvider {...formMethods}>
       <FormModal onClose={onClose} open={open} title="Dog task form">
         <FormGrid>
-          <FormTextField name="name" label="Name" required />
+          <FormTextField name="name" label="Task name" required />
 
           <DialogActions sx={{ padding: 0 }}>
             <Button size="medium" variant="outlined" onClick={onClose}>
