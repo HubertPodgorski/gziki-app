@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -9,12 +9,13 @@ import {
   useTheme,
 } from "@mui/material";
 import ChipsGrid from "./ChipsGrid";
-import FormButtonsGrid from "./FormButtonsGrid";
+import ButtonsGrid from "./ButtonsGrid";
 import { AppContext } from "../contexts/AppContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { socket } from "./SocketHandler";
 import { useIsMobile } from "../hooks/useIsMobile";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { sortByAttendance } from "../helpers/calendar";
 
 const EventDetails = ({ users, dogs, id }) => {
   const theme = useTheme();
@@ -25,6 +26,34 @@ const EventDetails = ({ users, dogs, id }) => {
   const { user } = useAuthContext();
 
   const isMobile = useIsMobile();
+
+  const usersWithAttendance = useMemo(
+    () =>
+      allUsers.map((user) => {
+        const userFound = users.find(
+          ({ _id: currentEventUserId }) => currentEventUserId === user._id
+        );
+
+        if (!userFound || !userFound.status) return user;
+
+        return { ...user, status: userFound.status };
+      }),
+    [allUsers, users]
+  );
+
+  const dogsWithAttendance = useMemo(
+    () =>
+      allDogs.map((dog) => {
+        const dogFound = dogs.find(
+          ({ _id: currentEventDogId }) => currentEventDogId === dog._id
+        );
+
+        if (!dogFound || !dogFound.status) return dog;
+
+        return { ...dog, status: dogFound.status };
+      }),
+    [allDogs, dogs]
+  );
 
   const getDogColors = useCallback(
     (_id) => {
@@ -88,6 +117,69 @@ const EventDetails = ({ users, dogs, id }) => {
     setDetailsOpen(!detailsOpen);
   };
 
+  const sortedDogsByAttendance = useMemo(
+    () => dogsWithAttendance.sort(sortByAttendance),
+    [dogsWithAttendance]
+  );
+
+  const sortedUsersByAttendance = useMemo(
+    () => usersWithAttendance.sort(sortByAttendance),
+    [usersWithAttendance]
+  );
+
+  const getColorsByStatus = (status) => {
+    const defaultColors = {
+      background: "yellow",
+      color: "#333",
+    };
+
+    if (!status) return defaultColors;
+
+    if (status === "PRESENT") return { background: "green", color: "#fff" };
+
+    if (status === "ABSENT") return { background: "red", color: "#fff" };
+
+    return defaultColors;
+  };
+
+  const getUserButtonColorById = useCallback(
+    (_id) => {
+      const defaultColor = "warning";
+
+      const userFound = users.find(
+        ({ _id: currentEventUserId }) => currentEventUserId === _id
+      );
+
+      if (!userFound) return defaultColor;
+
+      if (userFound?.status === "PRESENT") return "success";
+
+      if (userFound?.status === "ABSENT") return "error";
+
+      return defaultColor;
+    },
+    [users]
+  );
+
+  const getDogButtonColorById = useCallback(
+    (_id) => {
+      const defaultColor = "warning";
+
+      const dogFound = dogs.find(
+        ({ _id: currentDogId }) => currentDogId === _id
+      );
+
+      if (!dogFound) return defaultColor;
+
+      if (dogFound?.status === "PRESENT") return "success";
+
+      if (dogFound?.status === "ABSENT") return "error";
+
+      return defaultColor;
+    },
+    [dogs]
+  );
+
   return (
     <Accordion
       TransitionProps={{ unmountOnExit: true }}
@@ -126,8 +218,8 @@ const EventDetails = ({ users, dogs, id }) => {
         }}
       >
         <ChipsGrid>
-          {allDogs.map(({ name, _id }) => {
-            const { color, background } = getDogColors(_id);
+          {sortedDogsByAttendance.map(({ name, _id, status }) => {
+            const { color, background } = getColorsByStatus(status);
 
             return (
               <Chip
@@ -143,9 +235,8 @@ const EventDetails = ({ users, dogs, id }) => {
         </ChipsGrid>
 
         <ChipsGrid people>
-          {allUsers.map(({ name, _id }) => {
-            const { background, color } = getUserColors(_id);
-
+          {sortedUsersByAttendance.map(({ name, _id, status }) => {
+            const { color, background } = getColorsByStatus(status);
             return (
               <Chip
                 label={name}
@@ -164,35 +255,35 @@ const EventDetails = ({ users, dogs, id }) => {
         </Typography>
 
         {user.dogs.length > 0 && (
-          <FormButtonsGrid sx={{ justifyContent: "flex-start" }}>
+          <ButtonsGrid sx={{ justifyContent: "flex-start" }}>
             {user.dogs.map(({ _id: dogId, name }) => (
               <Button
                 variant="contained"
                 key={dogId}
-                color={getDogColors(dogId).button}
+                color={getDogButtonColorById(dogId)}
                 onClick={() => onDogPresenceUpdateClick(dogId)}
                 sx={{ minWidth: "150px" }}
               >
                 {name}
               </Button>
             ))}
-          </FormButtonsGrid>
+          </ButtonsGrid>
         )}
 
         <Typography variant={isMobile ? "body2" : "body1"}>
           Select my attendance
         </Typography>
 
-        <FormButtonsGrid sx={{ justifyContent: "flex-start" }}>
+        <ButtonsGrid sx={{ justifyContent: "flex-start" }}>
           <Button
             variant="contained"
-            color={getUserColors(user._id).button}
+            color={getUserButtonColorById(user._id)}
             onClick={() => onUserPresenceUpdateClick()}
             sx={{ minWidth: "150px" }}
           >
             {user.name}
           </Button>
-        </FormButtonsGrid>
+        </ButtonsGrid>
       </AccordionDetails>
     </Accordion>
   );

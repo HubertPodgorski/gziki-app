@@ -19,7 +19,15 @@ const App = () => (
           <CssBaseline />
 
           <BrowserRouter>
-            <Box sx={{ paddingBottom: 7 }}>
+            <Box
+              sx={{
+                padding: theme.spacing(2, 2, 9, 2),
+                [theme.breakpoints.down("md")]: {
+                  gridGap: theme.spacing(1),
+                  padding: theme.spacing(1, 1, 9, 1),
+                },
+              }}
+            >
               <Router />
 
               <BottomNavBar />

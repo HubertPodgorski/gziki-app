@@ -13,9 +13,9 @@ const getAllDogs = async (callback) => {
 const getDogById = async (received, callback) => {
   const { _id } = received;
 
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return res.status(404).json({ error: "DOG_NOT_FOUND" });
-  }
+  // if (!mongoose.Types.ObjectId.isValid(_id)) {
+  //   return res.status(404).json({ error: "DOG_NOT_FOUND" });
+  // }
 
   const dog = await DogModel.findById(_id);
 

@@ -89,7 +89,7 @@ const BottomNavBar = () => {
               }}
             >
               <PetsIcon />
-              <ListItemText primary="Pets" />
+              <ListItemText primary="Dogs" />
             </MenuListItemStyled>
 
             <MenuListItemStyled

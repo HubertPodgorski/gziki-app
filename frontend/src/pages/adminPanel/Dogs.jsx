@@ -76,7 +76,11 @@ const Dogs = () => {
           ))}
         </List>
 
-        <Button variant="contained" onClick={() => setFormOpen(true)}>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => setFormOpen(true)}
+        >
           Add
         </Button>
       </CenteredContent>

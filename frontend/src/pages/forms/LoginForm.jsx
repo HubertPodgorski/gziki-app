@@ -10,10 +10,8 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useLocation, useNavigate, useNavigation } from "react-router-dom";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   notAuthenticatedRoutes,
   userPaths,

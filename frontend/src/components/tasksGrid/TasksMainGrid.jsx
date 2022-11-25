@@ -6,10 +6,8 @@ const WrapperStyled = styled(Box)(({ theme }) => ({
   gridAutoFlow: "row",
   gridGap: 16,
   alignItems: "flex-start",
-  padding: 2,
 
   [theme.breakpoints.down("md")]: {
-    padding: 1,
     gridGap: theme.spacing(1),
   },
 }));

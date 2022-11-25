@@ -6,6 +6,7 @@ export const AppContext = createContext({
   events: [],
   users: [],
   dogTasks: [],
+  eventTemplates: [],
 });
 
 // TODO: start using reducers and actions
@@ -15,6 +16,7 @@ export const AppContextProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
   const [users, setUsers] = useState([]);
   const [dogTasks, setDogTasks] = useState([]);
+  const [eventTemplates, setEventTemplates] = useState([]);
 
   return (
     <AppContext.Provider
@@ -29,6 +31,8 @@ export const AppContextProvider = ({ children }) => {
         setUsers,
         dogTasks,
         setDogTasks,
+        eventTemplates,
+        setEventTemplates,
       }}
     >
       {children}

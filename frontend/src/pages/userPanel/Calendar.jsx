@@ -1,9 +1,7 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { AppContext } from "../../contexts/AppContext";
-import { Box, Divider, Typography, useTheme } from "@mui/material";
-import { useAuthContext } from "../../hooks/useAuthContext";
-import { socket } from "../../components/SocketHandler";
-import { findNextEventId, sortByNewest } from "../../helpers/calendar";
+import { Box, useTheme } from "@mui/material";
+import { sortByNewest } from "../../helpers/calendar";
 import EventCard from "../../components/EventCard";
 
 const Calendar = () => {
@@ -19,10 +17,8 @@ const Calendar = () => {
         display: "grid",
         gridAutoFlow: "row",
         gridGap: theme.spacing(2),
-        padding: theme.spacing(2),
 
         [theme.breakpoints.down("md")]: {
-          padding: theme.spacing(1),
           gridGap: theme.spacing(1),
         },
       }}

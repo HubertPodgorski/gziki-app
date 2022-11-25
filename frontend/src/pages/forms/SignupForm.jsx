@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   Box,
   Button,
@@ -10,14 +10,8 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
-import axios from "axios";
-import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import FormButtonsGrid from "../../components/FormButtonsGrid";
-import {
-  notAuthenticatedRoutes,
-  userPaths,
-} from "../../helpers/routesAndPaths";
+import { notAuthenticatedRoutes } from "../../helpers/routesAndPaths";
 import { useSignup } from "../../hooks/useSignup";
 
 const SignupForm = () => {

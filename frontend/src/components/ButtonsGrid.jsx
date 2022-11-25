@@ -7,8 +7,8 @@ const WrapperStyled = styled(Box)(({ theme }) => ({
   flexWrap: "wrap",
 }));
 
-const FormButtonsGrid = ({ children, sx = {} }) => (
+const ButtonsGrid = ({ children, sx = {} }) => (
   <WrapperStyled sx={{ ...sx }}>{children}</WrapperStyled>
 );
 
-export default FormButtonsGrid;
+export default ButtonsGrid;
