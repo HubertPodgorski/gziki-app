@@ -17,7 +17,7 @@ const FormTextField = ({ name, label, required = false, type, rules = {} }) => {
           label={label}
           required={required}
           type={type}
-          error={error ?? ""}
+          error={!!error}
           helperText={error?.message ?? ""}
         />
       )}
