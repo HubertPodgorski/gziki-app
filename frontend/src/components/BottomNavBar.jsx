@@ -24,6 +24,7 @@ import { adminRoutes, userRoutes } from "../helpers/routesAndPaths";
 import LoginLogoutListButton from "./LoginLogoutListButton";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { useIsAdmin } from "../hooks/useIsAdmin";
+import SaveIcon from "@mui/icons-material/Save";
 
 const drawerWidth = 240;
 
@@ -108,6 +109,15 @@ const BottomNavBar = () => {
             >
               <CalendarMonthIcon />
               <ListItemText primary="Events" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.eventTemplates);
+              }}
+            >
+              <SaveIcon />
+              <ListItemText primary="Event templates" />
             </MenuListItemStyled>
 
             <MenuListItemStyled

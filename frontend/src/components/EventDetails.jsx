@@ -182,7 +182,7 @@ const EventDetails = ({ users, dogs, id }) => {
 
   return (
     <Accordion
-      TransitionProps={{ unmountOnExit: true }}
+      TransitionProps={{ unmountOnExit: true, mountOnEnter: true }}
       expanded={detailsOpen}
       onChange={handleDetailsOpenChange}
       disableGutters

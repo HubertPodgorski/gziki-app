@@ -11,8 +11,8 @@ export const userRoutes = {
 
 export const userPaths = {
   root: "/user-panel",
-  tasks: "/user-panel/tasks",
-  calendar: "/user-panel/calendar",
+  tasks: "tasks",
+  calendar: "calendar",
 };
 
 export const adminRoutes = {
@@ -23,6 +23,7 @@ export const adminRoutes = {
   dogs: "/admin-panel/dogs",
   users: "/admin-panel/users",
   dogTasks: "/admin-panel/dog-tasks",
+  eventTemplates: "/admin-panel/event-templates",
 };
 
 export const adminPaths = {
@@ -33,4 +34,5 @@ export const adminPaths = {
   dogs: "dogs",
   users: "users",
   dogTasks: "dog-tasks",
+  eventTemplates: "event-templates",
 };
