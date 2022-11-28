@@ -34,6 +34,7 @@ const FormSelect = ({
             value={value ? value : formValue}
             label={label}
             multiple={multi}
+            MenuProps={{ sx: { maxHeight: "70vh" } }}
           >
             {generateSelectOptions()}
           </Select>
