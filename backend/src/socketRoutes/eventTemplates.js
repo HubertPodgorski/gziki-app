@@ -4,6 +4,7 @@ const {
   getEventTemplateById,
   deleteEventTemplateById,
   updateEventTemplateById,
+  loadTasksFromEventTemplate,
 } = require("../controllers/eventTemplateController");
 
 const routes = (io, socket) => {
@@ -25,6 +26,10 @@ const routes = (io, socket) => {
 
   socket.on("update_event_template", (received, callback) =>
     updateEventTemplateById(received, callback, io)
+  );
+
+  socket.on("load_tasks_from_event_template", (received) =>
+    loadTasksFromEventTemplate(received, io)
   );
 };
 

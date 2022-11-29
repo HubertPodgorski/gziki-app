@@ -8,6 +8,7 @@ import ButtonsGrid from "../../components/ButtonsGrid";
 import SaveEventAsTemplateButton from "../../components/admin/SaveEventAsTemplateButton";
 import TasksDragNDrop from "../../components/admin/TasksDragNDrop";
 import CurrentEventSelectWithDogs from "../../components/admin/CurrentEventSelectWithDogs";
+import EventTemplateSelector from "../../components/admin/EventTemplateSelector";
 
 const Tasks = () => {
   const theme = useTheme();
@@ -40,6 +41,8 @@ const Tasks = () => {
         },
       }}
     >
+      <EventTemplateSelector />
+
       <CurrentEventSelectWithDogs />
 
       <TasksDragNDrop

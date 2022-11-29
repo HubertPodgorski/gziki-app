@@ -3,11 +3,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormSelect from "../inputs/FormSelect";
 import { getFormattedDate } from "../../helpers/calendar";
 import ChipsGrid from "../ChipsGrid";
-import { Chip, useTheme } from "@mui/material";
+import { Chip } from "@mui/material";
 import { AppContext } from "../../contexts/AppContext";
 
 const CurrentEventSelectWithDogs = () => {
-  const theme = useTheme();
   const { events, tasks, dogs } = useContext(AppContext);
 
   const formMethods = useForm({

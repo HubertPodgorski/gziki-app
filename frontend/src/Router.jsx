@@ -18,6 +18,7 @@ import SignupForm from "./pages/forms/SignupForm";
 import { useAuthContext } from "./hooks/useAuthContext";
 import { useIsAdmin } from "./hooks/useIsAdmin";
 import DogTasks from "./pages/adminPanel/DogTasks";
+import EventTemplates from "./pages/adminPanel/EventTemplates";
 
 const Router = () => {
   const { user } = useAuthContext();
@@ -49,6 +50,10 @@ const Router = () => {
               <Route path={adminPaths.dogTasks} element={<DogTasks />} />
               <Route path={adminPaths.dogs} element={<Dogs />} />
               <Route path={adminPaths.events} element={<Events />} />
+              <Route
+                path={adminPaths.eventTemplates}
+                element={<EventTemplates />}
+              />
             </Route>
           )}
         </>
