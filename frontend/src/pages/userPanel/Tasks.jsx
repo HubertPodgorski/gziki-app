@@ -1,15 +1,12 @@
 import React from "react";
-import { Chip, Typography } from "@mui/material";
 import TasksMainGrid from "../../components/tasksGrid/TasksMainGrid";
 import TasksRow from "../../components/tasksGrid/TasksRow";
 import TasksColumn from "../../components/tasksGrid/TasksColumn";
-import TaskCell from "../../components/tasksGrid/TaskCell";
 import { useGetMappedTasks } from "../../hooks/useGetMappedTasks";
-import ChipsGrid from "../../components/ChipsGrid";
 import UserTaskCell from "../../components/UserTaskCell";
 
 const Tasks = () => {
-  const mappedTasks = useGetMappedTasks();
+  const { mappedTasks } = useGetMappedTasks();
 
   return (
     <TasksMainGrid>
