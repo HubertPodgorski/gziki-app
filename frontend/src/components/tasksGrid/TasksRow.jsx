@@ -32,6 +32,9 @@ const TasksRow = ({ children, rowIndex, userPanel, adminPanel }) => {
               position: "relative",
               paddingTop: theme.spacing(4),
               marginBottom: theme.spacing(0.5),
+              [theme.breakpoints.down("md")]: {
+                paddingTop: theme.spacing(4),
+              },
             }}
           >
             <Box {...dragHandleProps}>
@@ -41,6 +44,7 @@ const TasksRow = ({ children, rowIndex, userPanel, adminPanel }) => {
                 sx={{
                   position: "absolute",
                   top: 0,
+                  right: 0,
                 }}
                 variant="outlined"
                 color="info"
