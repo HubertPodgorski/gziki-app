@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import TasksMainGrid from "../tasksGrid/TasksMainGrid";
 import TasksRow from "../tasksGrid/TasksRow";
 import TasksColumn from "../tasksGrid/TasksColumn";
@@ -7,13 +7,18 @@ import TaskCell from "../tasksGrid/TaskCell";
 import ChipsGrid from "../ChipsGrid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DragDropContext } from "react-beautiful-dnd";
-import { getMappedItemsToUpdate } from "../../helpers/dragNDrop";
 import { socket } from "../SocketHandler";
 import { useIsMobile } from "../../hooks/useIsMobile";
-import { AppContext } from "../../contexts/AppContext";
+import { useMoveTasksRow } from "../../hooks/useMoveTasksRow";
+import { useMoveTasksCell } from "../../hooks/useMoveTasksCell";
 
-const TasksDragNDrop = ({ handleTaskEditClick, mappedTasks }) => {
-  const { tasks, setTasks } = useContext(AppContext);
+const TasksDragNDrop = ({
+  handleTaskEditClick,
+  mappedTasks,
+  setMappedTasks,
+}) => {
+  const moveTasksRow = useMoveTasksRow();
+  const moveTasksCell = useMoveTasksCell();
 
   const isMobile = useIsMobile();
 
@@ -22,36 +27,12 @@ const TasksDragNDrop = ({ handleTaskEditClick, mappedTasks }) => {
   };
 
   const onDragEnd = async (result) => {
-    const { destination, source, draggableId } = result;
-
-    if (
-      !destination ||
-      (destination.droppableId === source.droppableId &&
-        destination.index === source.index)
-    ) {
+    if (result.type === "row") {
+      moveTasksRow(result, mappedTasks, setMappedTasks);
       return;
     }
 
-    const mappedItemsToUpdate = getMappedItemsToUpdate(
-      destination,
-      source,
-      mappedTasks,
-      draggableId
-    );
-
-    const updatedTasksListWithChanges = tasks.map((task) => {
-      const updatedTaskFound = mappedItemsToUpdate.find(
-        ({ _id: mappedTaskId }) => mappedTaskId === task._id
-      );
-
-      if (!updatedTaskFound) return task;
-
-      return { ...task, ...updatedTaskFound };
-    });
-
-    setTasks(updatedTasksListWithChanges);
-
-    socket.emit("update_tasks_order", { tasks: mappedItemsToUpdate });
+    moveTasksCell(result, mappedTasks);
   };
 
   const onEditClick = async ({ position, description, dogs, _id }) => {
@@ -67,9 +48,14 @@ const TasksDragNDrop = ({ handleTaskEditClick, mappedTasks }) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <TasksMainGrid>
+      <TasksMainGrid adminPanel>
         {Object.entries(mappedTasks).map(([rowIndex, columns], index) => (
-          <TasksRow key={`${rowIndex}_${index}`} rowIndex={rowIndex}>
+          <TasksRow
+            key={`${rowIndex}_${index}`}
+            rowIndex={rowIndex}
+            adminPanel
+            index={index}
+          >
             {Object.entries(columns).map(([columnIndex, items]) => (
               <TasksColumn
                 rowIndex={rowIndex}

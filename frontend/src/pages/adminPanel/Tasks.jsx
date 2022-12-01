@@ -14,7 +14,7 @@ const Tasks = () => {
   const theme = useTheme();
   // TODO: load tasks from template
 
-  const mappedTasks = useGetMappedTasks(true);
+  const { mappedTasks, setMappedTasks } = useGetMappedTasks(true);
   const maxRowIndex = useGetMaxRowIndex(mappedTasks);
 
   const {
@@ -48,6 +48,7 @@ const Tasks = () => {
       <TasksDragNDrop
         handleTaskEditClick={handleTaskEditClick}
         mappedTasks={mappedTasks}
+        setMappedTasks={setMappedTasks}
       />
 
       <ButtonsGrid>
