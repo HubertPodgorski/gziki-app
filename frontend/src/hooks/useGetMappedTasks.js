@@ -9,7 +9,7 @@ export const useGetMappedTasks = (adminPanel) => {
 
   useEffect(() => {
     setMappedTasks(adminPanel ? mapTasksForAdminPanel(tasks) : mapTasks(tasks));
-  }, [tasks]);
+  }, [tasks, adminPanel]);
 
   return { mappedTasks, setMappedTasks };
 };
