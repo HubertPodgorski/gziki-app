@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { useAuthContext } from "./useAuthContext";
+import { Roles } from "../helpers/types";
 
-export const useIsAdmin = () => {
+export const useIsAdmin = (): boolean => {
   const { user } = useAuthContext();
 
   return useMemo(
@@ -9,7 +10,7 @@ export const useIsAdmin = () => {
       user &&
       user.roles &&
       user.roles.length > 0 &&
-      user.roles.includes("ADMIN"),
+      user.roles.includes(Roles.ADMIN),
     [user]
   );
 };

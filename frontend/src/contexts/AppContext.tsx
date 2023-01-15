@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
+import { AppContextType } from "./types";
 
-export const AppContext = createContext({
+export const AppContext = createContext<Partial<AppContextType>>({
   tasks: [],
   dogs: [],
   events: [],

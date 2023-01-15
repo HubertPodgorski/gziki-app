@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
 import { socket } from "../../components/SocketHandler";
 import { AppContext } from "../../contexts/AppContext";
 import { getFormattedDate } from "../../helpers/calendar";
-import FormSelect from "../../components/inputs/FormSelect";
+import { handleError } from "../../helpers/errorHandler";
+import { useSnackbar } from "notistack";
+import FormSingleAutocomplete from "../../components/inputs/FormSingleAutocomplete";
 
 const EventTemplateForm = ({ open, onClose, initialData, editingId }) => {
-  const { events } = useContext(AppContext);
+  const { events, eventTemplates } = useContext(AppContext);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const formMethods = useForm({
     defaultValues: initialData,
@@ -31,43 +34,68 @@ const EventTemplateForm = ({ open, onClose, initialData, editingId }) => {
       await socket.emit(
         "update_event_template",
         { _id: editingId, ...data },
-        () => onClose()
+        // TODO: not necessary as it always do something (either update existing or create new one)
+        handleError(
+          (error) => {
+            enqueueSnackbar(error, { variant: "error" });
+          },
+          () => onClose()
+        )
       );
     } else {
-      await socket.emit("add_event_template", data, () => onClose());
+      await socket.emit(
+        "add_event_template",
+        data,
+        // TODO: not necessary as it always do something (either update existing or create new one)
+        handleError(
+          (error) => {
+            enqueueSnackbar(error, { variant: "error" });
+          },
+          () => onClose()
+        )
+      );
     }
 
     // TODO: error handling eventually?
   };
 
-  const eventNamesOptions = useMemo(
-    () =>
-      events.map(({ name, date }) => {
-        const formattedValue = `${name} ${getFormattedDate(date)}`;
+  // TODO: add template names already created and remove duplicates here
+  const eventNamesOptions = useMemo(() => {
+    return [...events, ...eventTemplates].reduce(
+      (uniqueEventTemplateNameSuggestions, currentValue) => {
+        const nameToCompare =
+          "date" in currentValue
+            ? `${currentValue.name} ${getFormattedDate(currentValue.date)}`
+            : currentValue.name;
 
-        return {
-          value: formattedValue,
-          label: formattedValue,
-        };
-      }),
-    [events]
-  );
+        if (
+          uniqueEventTemplateNameSuggestions.some(
+            ({ value }) => value === nameToCompare
+          )
+        )
+          return uniqueEventTemplateNameSuggestions;
 
-  const name = formMethods.watch("name");
+        return [
+          ...uniqueEventTemplateNameSuggestions,
+          { value: nameToCompare, label: nameToCompare },
+        ];
+      },
+      []
+    );
+  }, [events, eventTemplates]);
 
   return (
     <FormProvider {...formMethods}>
-      <FormModal onClose={onClose} open={open} title="Event template form">
+      <FormModal
+        onClose={onClose}
+        open={open}
+        title="Add or update event template"
+      >
         <FormGrid>
-          <FormTextField name="name" label="Name" required />
-
-          <FormSelect
-            onChange={(e) => {
-              formMethods.setValue("name", e.target.value ?? "");
-            }}
-            value={name}
+          <FormSingleAutocomplete
+            required
             name="name"
-            label="Name"
+            label="Template name"
             multi={false}
             options={eventNamesOptions}
           />

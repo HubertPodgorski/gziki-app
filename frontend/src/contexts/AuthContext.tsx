@@ -1,11 +1,14 @@
-import { createContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { createContext, useEffect, useState } from "react";
+import { User } from "../helpers/types";
+import { AuthContextType } from "./types";
 
-export const AuthContext = createContext({ user: null });
+export const AuthContext = createContext<Partial<AuthContextType>>({
+  user: null,
+});
 
 // TODO: start using reducers and actions
 export const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const clearUserData = () => {
     setUser(null);
@@ -32,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
 
       const parsedToken = JSON.parse(atob(token.split(".")[1]));
 
-      if (parsedToken.exp * 1000 < new Date()) {
+      if (parsedToken.exp * 1000 < new Date().getTime()) {
         clearUserData();
       } else {
         setUser(user);

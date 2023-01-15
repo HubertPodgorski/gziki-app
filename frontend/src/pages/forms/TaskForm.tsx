@@ -7,12 +7,38 @@ import FormGrid from "../../components/FormGrid";
 import FormSelect from "../../components/inputs/FormSelect";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
+import { CreateEditTaskFormType, CreateEditTaskRequestType } from "./types";
+import { Position, Task } from "../../helpers/types";
 
-const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  initialData: Task;
+  editingId?: string;
+  maxRowIndex?: number;
+}
+
+const mapToFormType = ({
+  description,
+  dogs,
+  position,
+}: Task): CreateEditTaskFormType => ({
+  description,
+  dogs: dogs.map(({ _id }) => _id),
+  position,
+});
+
+const TaskForm = ({
+  open,
+  onClose,
+  initialData,
+  editingId,
+  maxRowIndex,
+}: Props) => {
   const { dogs, dogTasks } = useContext(AppContext);
 
-  const formMethods = useForm({
-    defaultValues: initialData,
+  const formMethods = useForm<CreateEditTaskFormType>({
+    defaultValues: mapToFormType(initialData),
   });
 
   const { handleSubmit, reset, watch, setValue } = useMemo(
@@ -21,12 +47,28 @@ const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
   );
 
   useEffect(() => {
-    const { description, dogs, position } = initialData;
-
-    reset({ description, dogs: dogs.map(({ _id }) => _id), position });
+    reset(mapToFormType(initialData));
   }, [initialData]);
 
-  const onSubmit = async (values) => {
+  const getPosition = (values: CreateEditTaskFormType): Position => {
+    if (editingId) {
+      return {
+        ...values.position,
+        rowIndex: values.position.rowIndex,
+      };
+    }
+
+    if (maxRowIndex) {
+      return {
+        ...values.position,
+        rowIndex: maxRowIndex,
+      };
+    }
+
+    return values.position;
+  };
+
+  const onSubmit = async (values: CreateEditTaskFormType) => {
     // TODO: map selected dogs to dogs
     // TODO: extract me to external method - used twice already
     const selectedDogs = values.dogs
@@ -39,13 +81,10 @@ const TaskForm = ({ open, onClose, initialData, editingId, maxRowIndex }) => {
       })
       .filter((dog) => !!dog);
 
-    const data = {
+    const data: CreateEditTaskRequestType = {
       description: values.description,
       dogs: selectedDogs,
-      position: {
-        ...values.position,
-        rowIndex: editingId ? values.position.rowIndex : maxRowIndex,
-      },
+      position: getPosition(values),
     };
 
     if (editingId) {

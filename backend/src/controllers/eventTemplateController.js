@@ -29,7 +29,22 @@ const getEventTemplateById = async (received, callback) => {
 const createEventTemplate = async (received, callback, io) => {
   const tasks = await TaskModel.find({});
 
-  const eventTemplate = await EventTemplateModel.create({ ...received, tasks });
+  const eventTemplateFound = await EventTemplateModel.findOne({
+    name: received.name,
+  });
+
+  let eventTemplate;
+
+  if (eventTemplateFound) {
+    eventTemplate = await EventTemplateModel.updateOne(
+      {
+        name: received.name,
+      },
+      { ...received, tasks }
+    );
+  } else {
+    eventTemplate = await EventTemplateModel.create({ ...received, tasks });
+  }
 
   const allEventTemplates = await EventTemplateModel.find({});
 

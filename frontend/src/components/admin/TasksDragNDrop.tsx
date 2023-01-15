@@ -2,7 +2,7 @@ import React from "react";
 import TasksMainGrid from "../tasksGrid/TasksMainGrid";
 import TasksRow from "../tasksGrid/TasksRow";
 import TasksColumn from "../tasksGrid/TasksColumn";
-import { Box, Chip, IconButton, Typography } from "@mui/material";
+import { Chip, IconButton, Typography } from "@mui/material";
 import TaskCell from "../tasksGrid/TaskCell";
 import ChipsGrid from "../ChipsGrid";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,6 +11,8 @@ import { socket } from "../SocketHandler";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useMoveTasksRow } from "../../hooks/useMoveTasksRow";
 import { useMoveTasksCell } from "../../hooks/useMoveTasksCell";
+import AddTaskHereButton from "../../components/AddTaskHereButton";
+import { getNewTaskPosition } from "./helpers";
 
 const TasksDragNDrop = ({
   handleTaskEditClick,
@@ -63,18 +65,6 @@ const TasksDragNDrop = ({
                 key={columnIndex}
                 adminPanel
               >
-                {!items.length && (
-                  <Box
-                    sx={{
-                      padding: 1,
-                      background: "#333",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    Task placeholder
-                  </Box>
-                )}
-
                 {!!items.length &&
                   items.map((item, index) => (
                     <TaskCell
@@ -115,6 +105,12 @@ const TasksDragNDrop = ({
                       </IconButton>
                     </TaskCell>
                   ))}
+
+                <AddTaskHereButton
+                  columnIndex={+columnIndex}
+                  rowIndex={+rowIndex}
+                  positionIndex={getNewTaskPosition(items)}
+                />
               </TasksColumn>
             ))}
           </TasksRow>
