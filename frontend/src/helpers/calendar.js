@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { EventType } from "../components/inputs/consts";
 
 export const sortByNewest = (eventA, eventB) => {
   return new Date(eventB.date) - new Date(eventA.date);
@@ -27,4 +28,18 @@ export const sortByAttendance = (objectA, objectB) => {
     return 1;
 
   return 0;
+};
+
+export const getBackgroundColorBasedOnType = (type) => {
+  switch (type) {
+    case EventType.COMPETITION:
+      return "#5A4F3F";
+    case EventType.SEMINARY:
+      return "#5A2F3F";
+    case EventType.MEETING:
+      return "#1A2F3F";
+    case EventType.TRAINING:
+    default:
+      return "#2F4F4F";
+  }
 };

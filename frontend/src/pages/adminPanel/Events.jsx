@@ -15,6 +15,7 @@ import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
 import { EventType } from "../../components/inputs/consts";
+import { getBackgroundColorBasedOnType } from "../../helpers/calendar";
 
 const Events = () => {
   const confirm = useConfirmModal();
@@ -61,6 +62,7 @@ const Events = () => {
         <List>
           {events.map(({ name, _id, date, type }) => (
             <ListItem
+              sx={{ backgroundColor: getBackgroundColorBasedOnType(type) }}
               divider
               key={_id}
               onClick={() => onEditClick({ name, date, type }, _id)}

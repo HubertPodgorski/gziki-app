@@ -4,12 +4,14 @@ export enum EventType {
   TRAINING = "TRAINING",
   COMPETITION = "COMPETITION",
   SEMINARY = "SEMINARY",
+  MEETING = "MEETING",
 }
 
 const eventTypes: EventType[] = [
   EventType.TRAINING,
   EventType.COMPETITION,
   EventType.SEMINARY,
+  EventType.MEETING,
 ];
 
 const getEventTypeLabelByType = (eventType: EventType) => {
@@ -20,6 +22,8 @@ const getEventTypeLabelByType = (eventType: EventType) => {
       return "Seminary";
     case EventType.TRAINING:
       return "Training";
+    case EventType.MEETING:
+      return "Meeting";
     default:
       return "";
   }
