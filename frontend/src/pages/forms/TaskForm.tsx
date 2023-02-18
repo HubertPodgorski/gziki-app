@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
 import FormSelect from "../../components/inputs/FormSelect";
@@ -9,6 +8,7 @@ import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 import { CreateEditTaskFormType, CreateEditTaskRequestType } from "./types";
 import { Position, Task } from "../../helpers/types";
+import FormTextSelect from "../../components/inputs/FormTextSelect";
 
 interface Props {
   open: boolean;
@@ -41,10 +41,7 @@ const TaskForm = ({
     defaultValues: mapToFormType(initialData),
   });
 
-  const { handleSubmit, reset, watch, setValue } = useMemo(
-    () => formMethods,
-    [formMethods]
-  );
+  const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
 
   useEffect(() => {
     reset(mapToFormType(initialData));
@@ -69,6 +66,7 @@ const TaskForm = ({
   };
 
   const onSubmit = async (values: CreateEditTaskFormType) => {
+    console.log("values => ", values);
     // TODO: map selected dogs to dogs
     // TODO: extract me to external method - used twice already
     const selectedDogs = values.dogs
@@ -105,27 +103,14 @@ const TaskForm = ({
     [dogTasks]
   );
 
-  const description = watch("description");
-
   return (
     <FormProvider {...formMethods}>
       <FormModal onClose={onClose} open={open} title="Task">
         <FormGrid>
-          <FormTextField
-            name="description"
-            label="Type task description"
-            required
-          />
-          <FormSelect
-            name="description"
-            value={description ? [description] : []}
-            onChange={(e) => {
-              if (e.target.value && e.target.value[0]) {
-                setValue("description", e.target.value[0]);
-              }
-            }}
-            label="Or select description"
+          <FormTextSelect
+            label="Type or select task description"
             options={dogTaskOptions}
+            name="description"
           />
 
           <FormSelect
@@ -133,6 +118,7 @@ const TaskForm = ({
             label="Dogs"
             options={dogs.map(({ name, _id }) => ({ value: _id, label: name }))}
           />
+
           <DialogActions sx={{ padding: 0 }}>
             <Button size="medium" variant="outlined" onClick={onClose}>
               Cancel

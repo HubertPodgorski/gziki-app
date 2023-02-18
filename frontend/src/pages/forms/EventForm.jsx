@@ -6,6 +6,8 @@ import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
 import FormDatePicker from "../../components/inputs/FormDatePicker";
 import { socket } from "../../components/SocketHandler";
+import { eventTypeOptions } from "../../components/inputs/consts";
+import FormSelect from "../../components/inputs/FormSelect";
 
 const EventForm = ({ open, onClose, initialData, editingId }) => {
   const formMethods = useForm({
@@ -15,15 +17,16 @@ const EventForm = ({ open, onClose, initialData, editingId }) => {
   const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
 
   useEffect(() => {
-    const { name, date } = initialData;
+    const { name, date, type } = initialData;
 
-    reset({ name, date });
+    reset({ name, date, type });
   }, [initialData]);
 
   const onSubmit = async (values) => {
     const data = {
       name: values.name,
       date: values.date,
+      type: values.type,
     };
 
     if (editingId) {
@@ -43,6 +46,13 @@ const EventForm = ({ open, onClose, initialData, editingId }) => {
     <FormProvider {...formMethods}>
       <FormModal onClose={onClose} open={open} title="Event">
         <FormGrid>
+          <FormSelect
+            multi={false}
+            name="type"
+            options={eventTypeOptions}
+            label="Event type"
+          />
+
           <FormTextField name="name" label="Name" required />
 
           <FormDatePicker name="date" label="Date" />

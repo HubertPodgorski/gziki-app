@@ -3,8 +3,22 @@ import { Card, Typography, useTheme } from "@mui/material";
 import { useIsMobile } from "../hooks/useIsMobile";
 import EventDetails from "./EventDetails";
 import { getFormattedDate } from "../helpers/calendar";
+import { EventType } from "./inputs/consts";
 
-const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
+const getColorBasedOnType = (type) => {
+  console.log("type => ", type);
+  switch (type) {
+    case EventType.COMPETITION:
+      return "";
+    case EventType.SEMINARY:
+      return "";
+    case EventType.TRAINING:
+    default:
+      return "blue";
+  }
+};
+
+const EventCard = ({ event: { _id, name, date, dogs, users, type } }) => {
   const isMobile = useIsMobile();
 
   const theme = useTheme();
@@ -17,7 +31,7 @@ const EventCard = ({ event: { _id, name, date, dogs, users } }) => {
         display: "grid",
         gridAutoFlow: "rows",
         gridGap: theme.spacing(2),
-
+        backgroundColor: getColorBasedOnType(type),
         [theme.breakpoints.down("md")]: {
           padding: theme.spacing(1),
           gridGap: theme.spacing(1),

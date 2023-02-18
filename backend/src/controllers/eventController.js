@@ -32,9 +32,9 @@ const getEventById = async (received, callback) => {
 
 // create new event
 const createEvent = async (received, callback, io) => {
-  const { name, date } = received;
+  const { name, date, type } = received;
 
-  const event = await EventModel.create({ name, date });
+  const event = await EventModel.create({ name, date, type });
   const allEvents = await EventModel.find({});
 
   callback(event);

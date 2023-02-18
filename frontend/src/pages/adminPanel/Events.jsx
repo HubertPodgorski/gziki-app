@@ -14,6 +14,7 @@ import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
+import { EventType } from "../../components/inputs/consts";
 
 const Events = () => {
   const confirm = useConfirmModal();
@@ -27,6 +28,7 @@ const Events = () => {
     handleEditClick,
     handleFormClose,
   } = useFormHelpers({
+    type: EventType.TRAINING,
     name: "",
     date: new Date().toString(),
     dogs: [],
@@ -42,11 +44,12 @@ const Events = () => {
     handleFormClose();
   };
 
-  const onEditClick = async ({ name, date }, id) => {
+  const onEditClick = async ({ name, date, type }, id) => {
     await handleEditClick(
       {
         name,
         date,
+        type: type ?? EventType.TRAINING,
       },
       id
     );
@@ -56,11 +59,11 @@ const Events = () => {
     <>
       <CenteredContent>
         <List>
-          {events.map(({ name, _id, date }) => (
+          {events.map(({ name, _id, date, type }) => (
             <ListItem
               divider
               key={_id}
-              onClick={() => onEditClick({ name, date }, _id)}
+              onClick={() => onEditClick({ name, date, type }, _id)}
             >
               {/*TODO: do edit*/}
               <ListItemButton>
