@@ -66,7 +66,6 @@ const TaskForm = ({
   };
 
   const onSubmit = async (values: CreateEditTaskFormType) => {
-    console.log("values => ", values);
     // TODO: map selected dogs to dogs
     // TODO: extract me to external method - used twice already
     const selectedDogs = values.dogs

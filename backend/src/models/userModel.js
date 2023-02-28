@@ -63,8 +63,6 @@ userSchema.statics.login = async function (email, password) {
     throw Error("ALL_FIELDS_MUST_BE_FILLED");
   }
 
-  console.log("email => ", email);
-
   const user = await this.findOne({ email });
 
   if (!user) {

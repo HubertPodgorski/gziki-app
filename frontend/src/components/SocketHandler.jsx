@@ -54,11 +54,9 @@ const SocketHandler = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.log("user => ", user);
     const userLocalstorage = localStorage.getItem("user");
 
     if (!userLocalstorage || !JSON.parse(userLocalstorage).token) return;
-    console.log("did fetch");
 
     socket.emit("get_all_dogs", (dogs) => {
       setDogs(dogs);
