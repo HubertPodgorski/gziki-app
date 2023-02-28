@@ -68,14 +68,20 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  if (socket.handshake.query.token) {
+    const { team } = jwt.decode(socket.handshake.query.token);
 
-  dogsSocketRoutes(io, socket);
-  eventsSocketRoutes(io, socket);
-  usersSocketRoutes(io, socket);
-  tasksSocketRoutes(io, socket);
-  dogTasksSocketRoutes(io, socket);
-  eventTemplatesSocketRoutes(io, socket);
+    console.log("connected to team => ", team);
+
+    socket.join(team);
+
+    dogsSocketRoutes(io, socket);
+    eventsSocketRoutes(io, socket);
+    usersSocketRoutes(io, socket);
+    tasksSocketRoutes(io, socket);
+    dogTasksSocketRoutes(io, socket);
+    eventTemplatesSocketRoutes(io, socket);
+  }
 });
 
 // TODO: later create WS emit message "error" and every time somethings is invalid emit that message with error test

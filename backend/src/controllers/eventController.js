@@ -3,10 +3,13 @@ const UserModel = require("../models/userModel");
 const DogModel = require("../models/dogModel");
 
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 // get all events
-const getAllEvents = async (callback) => {
-  const events = await EventModel.find({}).sort({ createdAt: -1 });
+const getAllEvents = async (callback, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const events = await EventModel.find({ team }).sort({ createdAt: -1 });
 
   callback(events);
 };
@@ -31,18 +34,23 @@ const getEventById = async (received, callback) => {
 };
 
 // create new event
-const createEvent = async (received, callback, io) => {
+const createEvent = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { name, date, type } = received;
 
-  const event = await EventModel.create({ name, date, type });
-  const allEvents = await EventModel.find({});
+  const event = await EventModel.create({ name, date, type, team });
+
+  const allEvents = await EventModel.find({ team });
 
   callback(event);
-  io.emit("events_updated", allEvents);
+  io.to(team).emit("events_updated", allEvents);
 };
 
 // delete event
-const deleteEventById = async (received, io) => {
+const deleteEventById = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: handle that
@@ -57,13 +65,15 @@ const deleteEventById = async (received, io) => {
   //   return res.status(400).json({ error: "EVENT_NOT_FOUND" });
   // }
 
-  const allEvents = await EventModel.find({});
+  const allEvents = await EventModel.find({ team });
 
-  io.emit("events_updated", allEvents);
+  io.to(team).emit("events_updated", allEvents);
 };
 
 // update event
-const updateEventById = async (received, callback, io) => {
+const updateEventById = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: handle that
@@ -78,13 +88,15 @@ const updateEventById = async (received, callback, io) => {
   //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
   // }
 
-  const allEvents = await EventModel.find({});
+  const allEvents = await EventModel.find({ team });
 
   callback(event);
-  io.emit("events_updated", allEvents);
+  io.to(team).emit("events_updated", allEvents);
 };
 
-const toggleEventDog = async (received, io) => {
+const toggleEventDog = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id, dogId } = received;
 
   // TODO: handle that
@@ -133,11 +145,13 @@ const toggleEventDog = async (received, io) => {
   //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
   // }
 
-  const allEvents = await EventModel.find({});
-  io.emit("events_updated", allEvents);
+  const allEvents = await EventModel.find({ team });
+  io.to(team).emit("events_updated", allEvents);
 };
 
-const toggleEventUserId = async (received, io) => {
+const toggleEventUserId = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id, userId } = received;
 
   // TODO: handle that
@@ -188,8 +202,8 @@ const toggleEventUserId = async (received, io) => {
   //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
   // }
 
-  const allEvents = await EventModel.find({});
-  io.emit("events_updated", allEvents);
+  const allEvents = await EventModel.find({ team });
+  io.to(team).emit("events_updated", allEvents);
 };
 
 module.exports = {

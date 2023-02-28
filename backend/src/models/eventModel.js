@@ -30,6 +30,7 @@ const eventSchema = new Schema(
       ],
       required: false,
     },
+    team: { type: String, required: true },
   },
   {
     timestamps: true,

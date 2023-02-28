@@ -1,10 +1,13 @@
 const DogTaskModel = require("../models/dogTaskModel");
 
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 // get all dogTasks
-const getAllDogTasks = async (callback) => {
-  const dogTasks = await DogTaskModel.find({}).sort({ createdAt: -1 });
+const getAllDogTasks = async (callback, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const dogTasks = await DogTaskModel.find({ team }).sort({ createdAt: -1 });
 
   callback(dogTasks);
 };
@@ -23,19 +26,24 @@ const getDogTaskById = async (received, callback) => {
 };
 
 // create new dog task
-const createDogTask = async (received, callback, io) => {
+const createDogTask = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { name } = received;
 
-  const dogTask = await DogTaskModel.create({ name });
+  const dogTask = await DogTaskModel.create({ name, team });
 
-  const allDogTasks = await DogTaskModel.find({});
+  const allDogTasks = await DogTaskModel.find({ team });
 
   callback("create_dog_task", dogTask);
-  io.emit("dog_tasks_updated", allDogTasks);
+
+  io.to(team).emit("dog_tasks_updated", allDogTasks);
 };
 
 // delete dog task
-const deleteDogTaskById = async (received, io) => {
+const deleteDogTaskById = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: WS handler for dog not found
@@ -47,12 +55,14 @@ const deleteDogTaskById = async (received, io) => {
 
   // TODO: WS handler for dog not found
 
-  const allDogTasks = await DogTaskModel.find({});
-  io.emit("dog_tasks_updated", allDogTasks);
+  const allDogTasks = await DogTaskModel.find({ team });
+  io.to(team).emit("dog_tasks_updated", allDogTasks);
 };
 
 // update dog
-const updateDogTaskById = async (received, callback, io) => {
+const updateDogTaskById = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: WS handler for dog not found
@@ -70,10 +80,10 @@ const updateDogTaskById = async (received, callback, io) => {
   //   return res.status(404).json({ error: "DOG_NOT_FOUND" });
   // }
 
-  const allDogTasks = await DogTaskModel.find({});
+  const allDogTasks = await DogTaskModel.find({ team });
 
   callback(dogTask);
-  io.emit("dog_tasks_updated", allDogTasks);
+  io.to(team).emit("dog_tasks_updated", allDogTasks);
 };
 
 module.exports = {

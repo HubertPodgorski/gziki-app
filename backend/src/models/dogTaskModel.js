@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const dogTaskSchema = new Schema({
   name: { type: String, required: true },
+  team: { type: String, required: true },
 });
 
 module.exports = mongoose.model("DogTask", dogTaskSchema);

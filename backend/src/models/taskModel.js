@@ -18,6 +18,7 @@ const taskSchema = new Schema(
       rowIndex: { type: Number, required: true },
       positionIndex: { type: Number, required: true },
     },
+    team: { type: String, required: true },
   },
   {
     timestamps: true,

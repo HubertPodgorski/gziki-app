@@ -7,20 +7,26 @@ const {
 } = require("../controllers/dogTaskController");
 
 const routes = (io, socket) => {
-  socket.on("get_all_dog_tasks", (callback) => getAllDogTasks(callback));
+  const userToken = socket.handshake.query.token;
+
+  socket.on("get_all_dog_tasks", (callback) =>
+    getAllDogTasks(callback, userToken)
+  );
 
   socket.on("add_dog_task", (received, callback) =>
-    createDogTask(received, callback, io)
+    createDogTask(received, callback, io, userToken)
   );
 
   socket.on("get_dog_task", (received, callback) =>
     getDogTaskById(received, callback)
   );
 
-  socket.on("delete_dog_task", (received) => deleteDogTaskById(received, io));
+  socket.on("delete_dog_task", (received) =>
+    deleteDogTaskById(received, io, userToken)
+  );
 
   socket.on("update_dog_task", (received, callback) =>
-    updateDogTaskById(received, callback, io)
+    updateDogTaskById(received, callback, io, userToken)
   );
 };
 

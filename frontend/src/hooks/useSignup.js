@@ -12,12 +12,13 @@ export const useSignup = () => {
 
   const { login } = useAuthContext();
 
-  const signup = async (name, email, password) => {
+  const signup = async (name, email, password, teamCode) => {
     setLoading(true);
     const data = {
       password,
       email,
       name,
+      teamCode,
     };
 
     const { data: responseData } = await axios.post(

@@ -2,10 +2,13 @@ const EventTemplateModel = require("../models/eventTemplateModel");
 const TaskModel = require("../models/taskModel");
 
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 // get all event templates
-const getAllEventTemplates = async (callback) => {
-  const eventTemplates = await EventTemplateModel.find({}).sort({
+const getAllEventTemplates = async (callback, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const eventTemplates = await EventTemplateModel.find({ team }).sort({
     createdAt: -1,
   });
 
@@ -26,11 +29,14 @@ const getEventTemplateById = async (received, callback) => {
 };
 
 // create new eventTemplate
-const createEventTemplate = async (received, callback, io) => {
-  const tasks = await TaskModel.find({});
+const createEventTemplate = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const tasks = await TaskModel.find({ team });
 
   const eventTemplateFound = await EventTemplateModel.findOne({
     name: received.name,
+    team,
   });
 
   let eventTemplate;
@@ -39,21 +45,28 @@ const createEventTemplate = async (received, callback, io) => {
     eventTemplate = await EventTemplateModel.updateOne(
       {
         name: received.name,
+        team,
       },
       { ...received, tasks }
     );
   } else {
-    eventTemplate = await EventTemplateModel.create({ ...received, tasks });
+    eventTemplate = await EventTemplateModel.create({
+      ...received,
+      tasks,
+      team,
+    });
   }
 
-  const allEventTemplates = await EventTemplateModel.find({});
+  const allEventTemplates = await EventTemplateModel.find({ team });
 
   callback("create_event_template", eventTemplate);
-  io.emit("event_templates_updated", allEventTemplates);
+  io.to(team).emit("event_templates_updated", allEventTemplates);
 };
 
 // delete eventTemplate
-const deleteEventTemplateById = async (received, io) => {
+const deleteEventTemplateById = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: WS handler for eventTemplate not found
@@ -65,12 +78,14 @@ const deleteEventTemplateById = async (received, io) => {
 
   // TODO: WS handler for eventTemplate not found
 
-  const allEventTemplates = await EventTemplateModel.find({});
-  io.emit("event_templates_updated", allEventTemplates);
+  const allEventTemplates = await EventTemplateModel.find({ team });
+  io.to(team).emit("event_templates_updated", allEventTemplates);
 };
 
 // update eventTemplate
-const updateEventTemplateById = async (received, callback, io) => {
+const updateEventTemplateById = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: WS handler for eventTemplate not found
@@ -80,7 +95,7 @@ const updateEventTemplateById = async (received, callback, io) => {
 
   const eventTemplate = await EventTemplateModel.findOneAndUpdate(
     { _id: _id },
-    { ...received }
+    { ...received, team }
   );
 
   // TODO: WS handler for event template not found
@@ -88,14 +103,16 @@ const updateEventTemplateById = async (received, callback, io) => {
   //   return res.status(404).json({ error: "EVENT_TEMPLATE_NOT_FOUND" });
   // }
 
-  const allEventTemplates = await EventTemplateModel.find({});
+  const allEventTemplates = await EventTemplateModel.find({ team });
 
   callback(eventTemplate);
-  io.emit("event_templates_updated", allEventTemplates);
+  io.to(team).emit("event_templates_updated", allEventTemplates);
 };
 
 // load tasks from event template
-const loadTasksFromEventTemplate = async (received, io) => {
+const loadTasksFromEventTemplate = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { eventTemplateId } = received;
 
   // TODO: WS handler for eventTemplate not found
@@ -112,7 +129,7 @@ const loadTasksFromEventTemplate = async (received, io) => {
   // TODO: revert on error while deleting
   // const currentTasks = TaskModel.find({});
 
-  await TaskModel.deleteMany({});
+  await TaskModel.deleteMany({ team });
   // try {
   //   await TaskModel.deleteMany({});
   // } catch (e) {
@@ -127,7 +144,7 @@ const loadTasksFromEventTemplate = async (received, io) => {
   //   return res.status(404).json({ error: "EVENT_TEMPLATE_NOT_FOUND" });
   // }
 
-  io.emit("tasks_updated", eventTemplate.tasks);
+  io.to(team).emit("tasks_updated", eventTemplate.tasks);
 };
 
 module.exports = {

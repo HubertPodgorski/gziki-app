@@ -22,8 +22,16 @@ const CurrentEventSelectWithDogs = () => {
 
     if (!event) return [];
 
-    return event.dogs;
-  }, [selectedEvent, events]);
+    return event.dogs.map((eventDogData) => {
+      const foundDog = dogs.find(
+        ({ _id: dogId }) => eventDogData._id === dogId
+      );
+
+      if (!foundDog) return eventDogData;
+
+      return { ...foundDog, status: eventDogData.status };
+    });
+  }, [selectedEvent, events, dogs]);
 
   const isDogPlanned = useCallback(
     (dogId) =>
@@ -52,11 +60,11 @@ const CurrentEventSelectWithDogs = () => {
 
       {selectedEventDogs.length > 0 && (
         <ChipsGrid>
-          {dogs.map(({ _id, name }) => (
+          {selectedEventDogs.map(({ _id, name, status }) => (
             <Chip
               label={name}
               key={_id}
-              color={isDogPlanned(_id) ? "success" : "error"}
+              color={isDogPlanned(_id, status) ? "success" : "error"}
             />
           ))}
         </ChipsGrid>

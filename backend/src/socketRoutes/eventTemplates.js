@@ -8,12 +8,14 @@ const {
 } = require("../controllers/eventTemplateController");
 
 const routes = (io, socket) => {
+  const userToken = socket.handshake.query.token;
+
   socket.on("get_all_event_templates", (callback) =>
-    getAllEventTemplates(callback)
+    getAllEventTemplates(callback, userToken)
   );
 
   socket.on("add_event_template", (received, callback) =>
-    createEventTemplate(received, callback, io)
+    createEventTemplate(received, callback, io, userToken)
   );
 
   socket.on("get_event_template", (received, callback) =>
@@ -21,15 +23,15 @@ const routes = (io, socket) => {
   );
 
   socket.on("delete_event_template", (received) =>
-    deleteEventTemplateById(received, io)
+    deleteEventTemplateById(received, io, userToken)
   );
 
   socket.on("update_event_template", (received, callback) =>
-    updateEventTemplateById(received, callback, io)
+    updateEventTemplateById(received, callback, io, userToken)
   );
 
   socket.on("load_tasks_from_event_template", (received) =>
-    loadTasksFromEventTemplate(received, io)
+    loadTasksFromEventTemplate(received, io, userToken)
   );
 };
 

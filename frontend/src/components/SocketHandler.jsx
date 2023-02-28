@@ -1,8 +1,16 @@
 import React, { useContext, useEffect } from "react";
 import io from "socket.io-client";
 import { AppContext } from "../contexts/AppContext";
+import { AuthContext } from "../contexts/AuthContext";
 
-export const socket = io.connect(process.env.REACT_APP_HTTPS_PROXY);
+const userLocalstorage = localStorage.getItem("user");
+
+// set the handshake with user token for team auth
+export const socket = io.connect(
+  `${process.env.REACT_APP_HTTPS_PROXY}${
+    userLocalstorage ? `?token=${JSON.parse(userLocalstorage).token}` : ""
+  }`
+);
 
 const SocketHandler = () => {
   const {
@@ -13,6 +21,7 @@ const SocketHandler = () => {
     setDogTasks,
     setEventTemplates,
   } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     socket.on("tasks_updated", (received) => {
@@ -45,6 +54,12 @@ const SocketHandler = () => {
   }, [socket]);
 
   useEffect(() => {
+    console.log("user => ", user);
+    const userLocalstorage = localStorage.getItem("user");
+
+    if (!userLocalstorage || !JSON.parse(userLocalstorage).token) return;
+    console.log("did fetch");
+
     socket.emit("get_all_dogs", (dogs) => {
       setDogs(dogs);
     });
@@ -68,7 +83,7 @@ const SocketHandler = () => {
     socket.emit("get_all_event_templates", (eventTemplates) => {
       setEventTemplates(eventTemplates);
     });
-  }, []);
+  }, [user]);
 
   return null;
 };

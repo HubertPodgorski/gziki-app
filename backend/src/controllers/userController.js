@@ -2,13 +2,15 @@ const UserModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
+const createToken = (_id, team) => {
+  return jwt.sign({ _id, team }, process.env.SECRET, { expiresIn: "3d" });
 };
 
 // get all users
-const getAllUsers = async (callback) => {
-  const users = await UserModel.find({}).sort({ createdAt: -1 });
+const getAllUsers = async (callback, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const users = await UserModel.find({ team }).sort({ createdAt: -1 });
 
   callback(users);
 };
@@ -33,19 +35,23 @@ const getUserById = async (received, callback) => {
 };
 
 // create new user
-const createUser = (received, callback, io) => async (req, res) => {
+const createUser = (received, callback, io, userToken) => async (req, res) => {
+  const { team } = jwt.decode(userToken);
+
   const { name, dogs } = received;
 
-  const user = await UserModel.create({ name, dogs });
+  const user = await UserModel.create({ name, dogs, team });
 
-  const allUsers = await UserModel.find({});
+  const allUsers = await UserModel.find({ team });
 
   callback(user);
-  io.emit("users_updated", allUsers);
+  io.to(team).emit("users_updated", allUsers);
 };
 
 // delete user
-const deleteUserById = async (received, io) => {
+const deleteUserById = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: handle that
@@ -60,13 +66,15 @@ const deleteUserById = async (received, io) => {
   //   return res.status(400).json({ error: "USER_NOT_FOUND" });
   // }
 
-  const allUsers = await UserModel.find({});
+  const allUsers = await UserModel.find({ team });
 
-  io.emit("users_updated", allUsers);
+  io.to(team).emit("users_updated", allUsers);
 };
 
 // update user
-const updateUserById = async (received, callback, io) => {
+const updateUserById = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   const { _id } = received;
 
   // TODO: handle that
@@ -74,25 +82,28 @@ const updateUserById = async (received, callback, io) => {
   //   return res.status(404).json({ error: "USER_NOT_FOUND" });
   // }
 
-  const user = await UserModel.findOneAndUpdate({ _id }, { ...received });
+  const user = await UserModel.findOneAndUpdate({ _id }, { ...received, team });
 
   // TODO: handle that
   // if (!user) {
   //   return res.status(404).json({ error: "USER_NOT_FOUND" });
   // }
 
-  const allUsers = await UserModel.find({});
+  const allUsers = await UserModel.find({ team });
 
   callback(user);
-  io.emit("users_updated", allUsers);
+  io.to(team).emit("users_updated", allUsers);
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, team } = req.body;
 
   try {
     const user = await UserModel.login(email, password);
-    const token = createToken(user._id);
+
+    let teamToSet = email === "SUPERADMIN" && team ? team : user.team;
+
+    const token = createToken(user._id, teamToSet);
 
     res.status(200).json({ user, token });
   } catch (e) {
@@ -103,12 +114,12 @@ const login = async (req, res) => {
 const logout = async (req, res) => {};
 
 const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, teamCode } = req.body;
 
   try {
-    const user = await UserModel.signup(email, password, name);
+    const user = await UserModel.signup(email, password, name, teamCode);
 
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.team);
 
     res.status(200).json({ user, token });
   } catch (e) {

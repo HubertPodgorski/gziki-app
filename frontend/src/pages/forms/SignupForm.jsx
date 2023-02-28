@@ -21,13 +21,19 @@ const SignupForm = () => {
   const { signup, loading } = useSignup();
 
   const formMethods = useForm({
-    defaultValues: { name: "", password: "", email: "", repeatPassword: "" },
+    defaultValues: {
+      name: "",
+      password: "",
+      email: "",
+      repeatPassword: "",
+      teamCode: "",
+    },
   });
 
   const { handleSubmit, watch } = useMemo(() => formMethods, [formMethods]);
 
-  const onSubmit = async ({ name, password, email }) => {
-    await signup(name, email, password);
+  const onSubmit = async ({ name, password, email, teamCode }) => {
+    await signup(name, email, password, teamCode);
   };
 
   return (
@@ -61,6 +67,8 @@ const SignupForm = () => {
               }}
               required
             />
+
+            <FormTextField name="teamCode" label="Team code" required />
 
             <Box sx={{ display: "grid", gridGap: theme.spacing(2) }}>
               <Button

@@ -4,6 +4,16 @@ const DogModel = require("./dogModel");
 
 const Schema = mongoose.Schema;
 
+const getTeamFromTeamCode = (teamCode) => {
+  switch (teamCode) {
+    case "DZIKIEGZIKI":
+      return "DZIKIE_GZIKI";
+
+    case "TEST":
+      return "TEST_TEAM";
+  }
+};
+
 const userSchema = new Schema(
   {
     dogs: {
@@ -13,13 +23,17 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     roles: { type: [{ type: String }] },
+    team: { type: String, required: true },
   },
   {
     timestamps: true,
   }
 );
 
-userSchema.statics.signup = async function (email, password, name) {
+userSchema.statics.signup = async function (email, password, name, teamCode) {
+  // TODO:
+  // if (!teamCode)
+
   if (!email || !password) {
     throw Error("ALL_FIELDS_MUST_BE_FILLED");
   }
@@ -38,6 +52,7 @@ userSchema.statics.signup = async function (email, password, name) {
     password: hash,
     name,
     roles: [],
+    team: getTeamFromTeamCode(teamCode ?? ""),
   });
 
   return user;
@@ -47,6 +62,8 @@ userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error("ALL_FIELDS_MUST_BE_FILLED");
   }
+
+  console.log("email => ", email);
 
   const user = await this.findOne({ email });
 

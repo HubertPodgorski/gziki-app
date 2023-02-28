@@ -1,10 +1,15 @@
 const TaskModel = require("../models/taskModel");
 
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 // get all tasks
-const getAllTasks = async (callback) => {
-  const tasks = await TaskModel.find({}).sort({ createdAt: -1 });
+const getAllTasks = async (callback, userToken) => {
+  const { team } = jwt.decode(userToken);
+
+  const tasks = await TaskModel.find({ team }).sort({
+    createdAt: -1,
+  });
 
   callback(tasks);
 };
@@ -29,10 +34,11 @@ const getTaskById = async (received, callback) => {
 };
 
 // create new task
-const createTask = async (received, callback, io) => {
+const createTask = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
   const { dogs, description, position } = received;
 
-  const task = await TaskModel.create({ dogs, description, position });
+  const task = await TaskModel.create({ dogs, description, position, team });
 
   // TODO: handle that
   // try {
@@ -41,14 +47,16 @@ const createTask = async (received, callback, io) => {
   //   res.status(400).json({ error: error.message });
   // }
 
-  const allTasks = await TaskModel.find({});
+  const allTasks = await TaskModel.find({ team });
 
   callback(task);
-  io.emit("tasks_updated", allTasks);
+
+  io.to(team).emit("tasks_updated", allTasks);
 };
 
 // delete task
-const deleteTaskById = async (received, io) => {
+const deleteTaskById = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
   const { _id } = received;
 
   // TODO: handle that
@@ -63,13 +71,14 @@ const deleteTaskById = async (received, io) => {
   //   return res.status(400).json({ error: "TASK_NOT_FOUND" });
   // }
 
-  const allTasks = await TaskModel.find({});
+  const allTasks = await TaskModel.find({ team });
 
-  io.emit("tasks_updated", allTasks);
+  io.to(team).emit("tasks_updated", allTasks);
 };
 
 // update task
-const updateTaskById = async (received, callback, io) => {
+const updateTaskById = async (received, callback, io, userToken) => {
+  const { team } = jwt.decode(userToken);
   const { _id } = received;
 
   // TODO: handle that
@@ -84,21 +93,24 @@ const updateTaskById = async (received, callback, io) => {
   //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
   // }
 
-  const allTasks = await TaskModel.find({});
+  const allTasks = await TaskModel.find({ team });
 
   callback(task);
-  io.emit("tasks_updated", allTasks);
+
+  io.to(team).emit("tasks_updated", allTasks);
 };
 
 // update tasks order // body = {tasks: [{_id: xx, position: {...}}, {_id: xx2, position: {...}}]}
-const updateTasksOrder = async (received, io) => {
+const updateTasksOrder = async (received, io, userToken) => {
+  const { team } = jwt.decode(userToken);
+
   for (const task of received.tasks) {
     await TaskModel.findOneAndUpdate({ _id: task._id }, { ...task });
   }
 
-  const allTasks = await TaskModel.find({});
+  const allTasks = await TaskModel.find({ team });
 
-  io.emit("tasks_updated", allTasks);
+  io.to(team).emit("tasks_updated", allTasks);
 };
 
 module.exports = {
