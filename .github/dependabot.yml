@@ -12,7 +12,7 @@ updates:
       time: "07:00"
       timezone: "Europe/Warsaw"
     allow:
-      - dependency-type: "all"
+      - dependency-type: "direct"
     commit-message:
       prefix: "[package.json] "
     labels:
@@ -28,7 +28,7 @@ updates:
       time: "07:00"
       timezone: "Europe/Warsaw"
     allow:
-      - dependency-type: "all"
+      - dependency-type: "direct"
     commit-message:
       prefix: "[package.json] "
     labels:
