@@ -19,7 +19,7 @@ updates:
       - "package.json"
       - "dependencies"
     # lower this value down after couple initial package bumps
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
     
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/backend" # Location of package manifests
@@ -35,5 +35,5 @@ updates:
       - "package.json"
       - "dependencies"
     # lower this value down after couple initial package bumps
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
 
