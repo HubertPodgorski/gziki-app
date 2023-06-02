@@ -25,6 +25,8 @@ import LoginLogoutListButton from "./LoginLogoutListButton";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import { useIsAdmin } from "../hooks/useIsAdmin";
 import SaveIcon from "@mui/icons-material/Save";
+import SettingsIcon from "@mui/icons-material/Settings";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 const drawerWidth = 240;
 
@@ -67,6 +69,14 @@ const BottomNavBar = () => {
           }}
         >
           <CalendarMonthIcon /> <ListItemText primary="Calendar" />
+        </MenuListItemStyled>
+
+        <MenuListItemStyled
+          onClick={() => {
+            navigate(userRoutes.settings);
+          }}
+        >
+          <SettingsIcon /> <ListItemText primary="Settings" />
         </MenuListItemStyled>
 
         {isAdmin && (
@@ -127,6 +137,15 @@ const BottomNavBar = () => {
             >
               <PersonIcon />
               <ListItemText primary="Users" />
+            </MenuListItemStyled>
+
+            <MenuListItemStyled
+              onClick={() => {
+                navigate(adminRoutes.notifications);
+              }}
+            >
+              <NotificationsIcon />
+              <ListItemText primary="Notifications" />
             </MenuListItemStyled>
           </>
         )}

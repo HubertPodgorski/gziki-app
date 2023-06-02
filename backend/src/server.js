@@ -6,6 +6,7 @@ const eventsSocketRoutes = require("./socketRoutes/events");
 const usersSocketRoutes = require("./socketRoutes/users");
 const dogTasksSocketRoutes = require("./socketRoutes/dogTasks");
 const eventTemplatesSocketRoutes = require("./socketRoutes/eventTemplates");
+const notificationsSocketRoutes = require("./socketRoutes/notifications");
 const usersRoutes = require("./routes/users");
 
 const jwt = require("jsonwebtoken");
@@ -69,11 +70,11 @@ io.use((socket, next) => {
 
 io.on("connection", (socket) => {
   if (socket.handshake.query.token) {
-    const { team } = jwt.decode(socket.handshake.query.token);
+    const tokenData = jwt.decode(socket.handshake.query.token);
 
-    console.log("connected to team => ", team);
+    if (!tokenData) return;
 
-    socket.join(team);
+    socket.join(tokenData.team);
 
     dogsSocketRoutes(io, socket);
     eventsSocketRoutes(io, socket);
@@ -81,6 +82,7 @@ io.on("connection", (socket) => {
     tasksSocketRoutes(io, socket);
     dogTasksSocketRoutes(io, socket);
     eventTemplatesSocketRoutes(io, socket);
+    notificationsSocketRoutes(io, socket);
   }
 });
 

@@ -1,11 +1,14 @@
 import { Dog, DogTask, EventTemplate, Task, User } from "../helpers/types";
 import { Dispatch, SetStateAction } from "react";
+import { Socket } from "socket.io-client";
 
 export interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
   setUser: Dispatch<SetStateAction<User>>;
+  socket: Socket<any, any> | null;
+  setSocket: (socket: Socket<any, any> | null) => void;
 }
 
 export interface AppContextType {

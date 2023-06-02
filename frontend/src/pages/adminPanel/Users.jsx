@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
-import { Box, Chip, IconButton, List, ListItem, useTheme } from "@mui/material";
+import { Box, Chip, IconButton, List, ListItem } from "@mui/material";
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UserForm from "../forms/UserForm";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
-import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
 import ChipsGrid from "../../components/ChipsGrid";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const Users = () => {
-  const theme = useTheme();
+  const { socket } = useSocketContext();
   const confirm = useConfirmModal();
   const { users } = useContext(AppContext);
 

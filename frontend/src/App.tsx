@@ -10,33 +10,36 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import BottomNavBar from "./components/BottomNavBar";
 import { ConfirmProvider } from "material-ui-confirm";
 import { SnackbarProvider } from "notistack";
+import { SocketContextProvider } from "./contexts/SocketContext.jsx";
 
 const App = () => (
   <ThemeProvider theme={theme}>
     <SnackbarProvider maxSnack={3}>
       <ConfirmProvider>
         <AuthContextProvider>
-          <AppContextProvider>
-            <SocketHandler />
+          <SocketContextProvider>
+            <AppContextProvider>
+              <SocketHandler />
 
-            <CssBaseline />
+              <CssBaseline />
 
-            <BrowserRouter>
-              <Box
-                sx={{
-                  padding: theme.spacing(2, 2, 9, 2),
-                  [theme.breakpoints.down("md")]: {
-                    gridGap: theme.spacing(1),
-                    padding: theme.spacing(1, 1, 9, 1),
-                  },
-                }}
-              >
-                <Router />
+              <BrowserRouter>
+                <Box
+                  sx={{
+                    padding: theme.spacing(2, 2, 9, 2),
+                    [theme.breakpoints.down("md")]: {
+                      gridGap: theme.spacing(1),
+                      padding: theme.spacing(1, 1, 9, 1),
+                    },
+                  }}
+                >
+                  <Router />
 
-                <BottomNavBar />
-              </Box>
-            </BrowserRouter>
-          </AppContextProvider>
+                  <BottomNavBar />
+                </Box>
+              </BrowserRouter>
+            </AppContextProvider>
+          </SocketContextProvider>
         </AuthContextProvider>
       </ConfirmProvider>
     </SnackbarProvider>

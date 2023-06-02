@@ -2,9 +2,8 @@ import React, { useCallback, useContext, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import FormSelect from "../inputs/FormSelect";
 import { getFormattedDate } from "../../helpers/calendar";
-import ChipsGrid from "../ChipsGrid";
-import { Chip } from "@mui/material";
 import { AppContext } from "../../contexts/AppContext";
+import DogAttendanceChips from "../DogAttendanceChips";
 
 const CurrentEventSelectWithDogs = () => {
   const { events, tasks, dogs } = useContext(AppContext);
@@ -41,6 +40,30 @@ const CurrentEventSelectWithDogs = () => {
     [tasks]
   );
 
+  const dogsWithAttendance = useMemo(() => {
+    if (!selectedEvent) return [];
+
+    const event = events.find(({ _id }) => _id === selectedEvent);
+
+    if (!event) return [];
+
+    return dogs.map((dog) => {
+      const dogFound = selectedEventDogs.find(
+        ({ _id: currentEventDogId }) => currentEventDogId === dog._id
+      );
+
+      const isPlanned = isDogPlanned(dog._id);
+
+      if (!dogFound || !dogFound.status) return { ...dog, isPlanned };
+
+      return {
+        ...dog,
+        status: dogFound.status,
+        isPlanned,
+      };
+    });
+  }, [dogs, selectedEvent, events, isDogPlanned, selectedEventDogs]);
+
   return (
     <>
       <FormProvider {...formMethods}>
@@ -58,16 +81,11 @@ const CurrentEventSelectWithDogs = () => {
         />
       </FormProvider>
 
-      {selectedEventDogs.length > 0 && (
-        <ChipsGrid>
-          {selectedEventDogs.map(({ _id, name, status }) => (
-            <Chip
-              label={name}
-              key={_id}
-              color={isDogPlanned(_id, status) ? "success" : "error"}
-            />
-          ))}
-        </ChipsGrid>
+      {dogsWithAttendance.length > 0 && (
+        <DogAttendanceChips
+          dogsWithAttendance={dogsWithAttendance}
+          showIfPlanned
+        />
       )}
     </>
   );

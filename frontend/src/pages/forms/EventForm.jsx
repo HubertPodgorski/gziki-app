@@ -5,11 +5,12 @@ import FormTextField from "../../components/inputs/FormTextField";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
 import FormDatePicker from "../../components/inputs/FormDatePicker";
-import { socket } from "../../components/SocketHandler";
 import { eventTypeOptions } from "../../components/inputs/consts";
 import FormSelect from "../../components/inputs/FormSelect";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const EventForm = ({ open, onClose, initialData, editingId }) => {
+  const { socket } = useSocketContext();
   const formMethods = useForm({
     defaultValues: initialData,
   });

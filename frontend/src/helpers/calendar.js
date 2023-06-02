@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { EventType } from "../components/inputs/consts";
+import theme from "./theme";
 
 export const sortByNewest = (eventA, eventB) => {
   return new Date(eventB.date) - new Date(eventA.date);
@@ -41,5 +42,23 @@ export const getBackgroundColorBasedOnType = (type) => {
     case EventType.TRAINING:
     default:
       return "#2F4F4F";
+  }
+};
+
+export const getColorsByStatus = (status) => {
+  const defaultColors = {
+    background: theme.palette.warning.main,
+    color: "#333",
+  };
+
+  switch (status) {
+    case "PRESENT":
+      return { background: theme.palette.success.main, color: "#333" };
+
+    case "ABSENT":
+      return { background: theme.palette.error.main, color: "#fff" };
+
+    default:
+      return defaultColors;
   }
 };

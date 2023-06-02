@@ -4,9 +4,11 @@ import FormSelect from "../inputs/FormSelect";
 import { AppContext } from "../../contexts/AppContext";
 import { Box, Button, useTheme } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
-import { socket } from "../SocketHandler";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const EventTemplateSelector = () => {
+  const { socket } = useSocketContext();
+
   const theme = useTheme();
   const { eventTemplates, tasks } = useContext(AppContext);
 

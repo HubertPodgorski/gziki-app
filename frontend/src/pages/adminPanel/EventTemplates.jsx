@@ -4,11 +4,12 @@ import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
-import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
 import EventTemplateForm from "../forms/EventTemplateForm";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const EventTemplates = () => {
+  const { socket } = useSocketContext();
   const { eventTemplates } = useContext(AppContext);
   const confirm = useConfirmModal();
 

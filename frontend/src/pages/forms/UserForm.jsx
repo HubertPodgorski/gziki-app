@@ -6,10 +6,11 @@ import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
 import FormSelect from "../../components/inputs/FormSelect";
 import { AppContext } from "../../contexts/AppContext";
-import { socket } from "../../components/SocketHandler";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const UserForm = ({ open, onClose, initialData, editingId }) => {
   const { dogs } = useContext(AppContext);
+  const { socket } = useSocketContext();
 
   const formMethods = useForm({
     defaultValues: initialData,

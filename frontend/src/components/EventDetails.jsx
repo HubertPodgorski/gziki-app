@@ -12,10 +12,11 @@ import ChipsGrid from "./ChipsGrid";
 import ButtonsGrid from "./ButtonsGrid";
 import { AppContext } from "../contexts/AppContext";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { socket } from "./SocketHandler";
 import { useIsMobile } from "../hooks/useIsMobile";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { sortByAttendance } from "../helpers/calendar";
+import { getColorsByStatus, sortByAttendance } from "../helpers/calendar";
+import { useSocketContext } from "../hooks/useSocketContext";
+import DogAttendanceChips from "./DogAttendanceChips";
 
 const EventDetails = ({ users, dogs, id }) => {
   const theme = useTheme();
@@ -24,6 +25,7 @@ const EventDetails = ({ users, dogs, id }) => {
 
   const { dogs: allDogs, users: allUsers } = useContext(AppContext);
   const { user } = useAuthContext();
+  const { socket } = useSocketContext();
 
   const isMobile = useIsMobile();
 
@@ -55,56 +57,6 @@ const EventDetails = ({ users, dogs, id }) => {
     [allDogs, dogs]
   );
 
-  const getDogColors = useCallback(
-    (_id) => {
-      const defaultColors = {
-        background: "yellow",
-        color: "#333",
-        button: "warning",
-      };
-
-      const dogFound = dogs.find(
-        ({ _id: currentDogId }) => currentDogId === _id
-      );
-
-      if (!dogFound) return defaultColors;
-
-      if (dogFound?.status === "PRESENT")
-        return { background: "green", color: "#fff", button: "success" };
-
-      if (dogFound?.status === "ABSENT")
-        return { background: "red", color: "#fff", button: "error" };
-
-      return defaultColors;
-    },
-    [dogs]
-  );
-
-  const getUserColors = useCallback(
-    (_id) => {
-      const defaultColors = {
-        background: "yellow",
-        color: "#333",
-        button: "warning",
-      };
-
-      const userFound = users.find(
-        ({ _id: currentEventUserId }) => currentEventUserId === _id
-      );
-
-      if (!userFound) return defaultColors;
-
-      if (userFound?.status === "PRESENT")
-        return { background: "green", color: "#fff", button: "success" };
-
-      if (userFound?.status === "ABSENT")
-        return { background: "red", color: "#fff", button: "error" };
-
-      return defaultColors;
-    },
-    [users]
-  );
-
   const onDogPresenceUpdateClick = (dogId) => {
     socket.emit("toggle_event_dog", { dogId, _id: id });
   };
@@ -117,30 +69,10 @@ const EventDetails = ({ users, dogs, id }) => {
     setDetailsOpen(!detailsOpen);
   };
 
-  const sortedDogsByAttendance = useMemo(
-    () => dogsWithAttendance.sort(sortByAttendance),
-    [dogsWithAttendance]
-  );
-
   const sortedUsersByAttendance = useMemo(
     () => usersWithAttendance.sort(sortByAttendance),
     [usersWithAttendance]
   );
-
-  const getColorsByStatus = (status) => {
-    const defaultColors = {
-      background: "yellow",
-      color: "#333",
-    };
-
-    if (!status) return defaultColors;
-
-    if (status === "PRESENT") return { background: "green", color: "#fff" };
-
-    if (status === "ABSENT") return { background: "red", color: "#fff" };
-
-    return defaultColors;
-  };
 
   const getUserButtonColorById = useCallback(
     (_id) => {
@@ -217,26 +149,12 @@ const EventDetails = ({ users, dogs, id }) => {
           },
         }}
       >
-        <ChipsGrid>
-          {sortedDogsByAttendance.map(({ name, _id, status }) => {
-            const { color, background } = getColorsByStatus(status);
-
-            return (
-              <Chip
-                label={name}
-                key={_id}
-                sx={{
-                  background,
-                  color,
-                }}
-              />
-            );
-          })}
-        </ChipsGrid>
+        <DogAttendanceChips dogsWithAttendance={dogsWithAttendance} />
 
         <ChipsGrid people>
           {sortedUsersByAttendance.map(({ name, _id, status }) => {
             const { color, background } = getColorsByStatus(status);
+
             return (
               <Chip
                 label={name}

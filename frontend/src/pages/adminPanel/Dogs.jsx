@@ -11,10 +11,11 @@ import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
-import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const Dogs = () => {
+  const { socket } = useSocketContext();
   const { dogs } = useContext(AppContext);
   const confirm = useConfirmModal();
 

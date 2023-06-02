@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { notAuthenticatedRoutes } from "../../helpers/routesAndPaths";
 import { useSignup } from "../../hooks/useSignup";
 
+const validTeamCodes = ["DZIKIEGZIKI", "TEST"];
+
 const SignupForm = () => {
   const theme = useTheme();
 
@@ -68,7 +70,18 @@ const SignupForm = () => {
               required
             />
 
-            <FormTextField name="teamCode" label="Team code" required />
+            <FormTextField
+              rules={{
+                validate: (currentValue) => {
+                  if (!validTeamCodes.includes(currentValue)) {
+                    return "Invalid team invitation code";
+                  }
+                },
+              }}
+              name="teamCode"
+              label="Team code"
+              required
+            />
 
             <Box sx={{ display: "grid", gridGap: theme.spacing(2) }}>
               <Button

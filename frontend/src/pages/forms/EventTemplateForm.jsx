@@ -3,15 +3,16 @@ import { Button, DialogActions } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import FormModal from "../../components/FormModal";
 import FormGrid from "../../components/FormGrid";
-import { socket } from "../../components/SocketHandler";
 import { AppContext } from "../../contexts/AppContext";
 import { getFormattedDate } from "../../helpers/calendar";
 import { handleError } from "../../helpers/errorHandler";
 import { useSnackbar } from "notistack";
 import FormSingleAutocomplete from "../../components/inputs/FormSingleAutocomplete";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const EventTemplateForm = ({ open, onClose, initialData, editingId }) => {
   const { events, eventTemplates } = useContext(AppContext);
+  const { socket } = useSocketContext();
 
   const { enqueueSnackbar } = useSnackbar();
 

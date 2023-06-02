@@ -12,12 +12,13 @@ import EventForm from "../forms/EventForm";
 import dayjs from "dayjs";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
-import { socket } from "../../components/SocketHandler";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
 import { EventType } from "../../components/inputs/consts";
 import { getBackgroundColorBasedOnType } from "../../helpers/calendar";
+import { useSocketContext } from "../../hooks/useSocketContext";
 
 const Events = () => {
+  const { socket } = useSocketContext();
   const confirm = useConfirmModal();
   const { events } = useContext(AppContext);
 

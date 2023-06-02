@@ -4,12 +4,16 @@ import {
   adminPaths,
   notAuthenticatedRoutes,
   userPaths,
+  userRoutes,
+  adminRoutes,
 } from "./helpers/routesAndPaths";
 import UserPanel from "./pages/userPanel/UserPanel";
 import AdminPanel from "./pages/adminPanel/AdminPanel";
 import Tasks from "./pages/userPanel/Tasks";
 import AdminTasks from "./pages/adminPanel/Tasks";
+import Notifications from "./pages/adminPanel/Notifications";
 import Calendar from "./pages/userPanel/Calendar";
+import Settings from "./pages/userPanel/Settings";
 import Users from "./pages/adminPanel/Users";
 import Dogs from "./pages/adminPanel/Dogs";
 import Events from "./pages/adminPanel/Events";
@@ -35,21 +39,26 @@ const Router = () => {
       {!!user && (
         <>
           <Route path={userPaths.root} element={<UserPanel />}>
-            <Route index element={<Navigate to={userPaths.tasks} />} />
+            <Route index element={<Navigate to={userRoutes.tasks} />} />
 
             <Route path={userPaths.tasks} element={<Tasks />} />
             <Route path={userPaths.calendar} element={<Calendar />} />
+            <Route path={userPaths.settings} element={<Settings />} />
           </Route>
 
           {isAdmin && (
             <Route path={adminPaths.root} element={<AdminPanel />}>
-              <Route index element={<Navigate to={adminPaths.tasks} />} />
+              <Route index element={<Navigate to={adminRoutes.tasks} />} />
 
               <Route path={adminPaths.tasks} element={<AdminTasks />} />
               <Route path={adminPaths.users} element={<Users />} />
               <Route path={adminPaths.dogTasks} element={<DogTasks />} />
               <Route path={adminPaths.dogs} element={<Dogs />} />
               <Route path={adminPaths.events} element={<Events />} />
+              <Route
+                path={adminPaths.notifications}
+                element={<Notifications />}
+              />
               <Route
                 path={adminPaths.eventTemplates}
                 element={<EventTemplates />}
@@ -59,7 +68,7 @@ const Router = () => {
         </>
       )}
 
-      <Route index element={<UserPanel />} />
+      <Route index element={<Navigate to={userRoutes.tasks} />} />
 
       <Route path={"/login"} element={<LoginForm />} />
       <Route path={"/signup"} element={<SignupForm />} />

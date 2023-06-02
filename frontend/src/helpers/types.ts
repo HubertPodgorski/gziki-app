@@ -53,3 +53,11 @@ export interface EventTemplate {
   name: string;
   tasks: Task[];
 }
+
+export interface DogWithAttendance extends Dog {
+  status?: string;
+}
+
+export interface DogWithAttendanceAndPlannedInfo extends DogWithAttendance {
+  isPlanned?: boolean;
+}
