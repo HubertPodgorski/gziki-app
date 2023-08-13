@@ -9,6 +9,9 @@ const getTeamFromTeamCode = (teamCode) => {
     case "DZIKIEGZIKI":
       return "DZIKIE_GZIKI";
 
+    case "DZIKIE_GZIKI_NABOR":
+      return "DZIKIE_GZIKI_NABOR";
+
     case "TEST":
       return "TEST_TEAM";
   }
