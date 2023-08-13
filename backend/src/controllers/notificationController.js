@@ -6,23 +6,38 @@ const jwt = require("jsonwebtoken");
 const { pushNotifications } = require("../helpers/push");
 
 // save subscription
-const saveSubscription = async (received, userToken) => {
-  const { team, email } = jwt.decode(userToken);
+const saveSubscription = async (received, callback, userToken) => {
+  const { team, _id } = jwt.decode(userToken);
 
-  const alreadyFound = await SubscriptionModel.findOne({
-    endpoint: received.endpoint,
+  await SubscriptionModel.findOneAndDelete({
+    userId: _id,
   });
 
-  if (alreadyFound) return;
+  const createdSubscription = await SubscriptionModel.create({
+    ...received,
+    team: team,
+    userId: _id,
+  });
 
-  await SubscriptionModel.create({ ...received, team, userEmail: email });
+  callback(createdSubscription);
+};
+
+const getSubscriptionDetails = async (callback, userToken) => {
+  const { _id } = jwt.decode(userToken);
+
+  const foundSubscription = await SubscriptionModel.findOne({
+    userId: _id,
+  });
+
+  callback(foundSubscription);
 };
 
 const sendNotification = async (received, userToken) => {
-  pushNotifications(userToken, received);
+  await pushNotifications(userToken, received);
 };
 
 module.exports = {
   saveSubscription,
   sendNotification,
+  getSubscriptionDetails,
 };

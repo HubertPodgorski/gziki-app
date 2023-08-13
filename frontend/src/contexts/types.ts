@@ -1,4 +1,11 @@
-import { Dog, DogTask, EventTemplate, Task, User } from "../helpers/types";
+import {
+  Dog,
+  DogTask,
+  EventTemplate,
+  Subscription,
+  Task,
+  User,
+} from "../helpers/types";
 import { Dispatch, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 
@@ -24,4 +31,6 @@ export interface AppContextType {
   setDogTasks: Dispatch<SetStateAction<DogTask[]>>;
   eventTemplates: EventTemplate[];
   setEventTemplates: Dispatch<SetStateAction<EventTemplate[]>>;
+  subscriptionDetails?: Subscription;
+  setSubscriptionDetails: Dispatch<SetStateAction<Subscription | undefined>>;
 }

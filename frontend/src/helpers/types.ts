@@ -61,3 +61,14 @@ export interface DogWithAttendance extends Dog {
 export interface DogWithAttendanceAndPlannedInfo extends DogWithAttendance {
   isPlanned?: boolean;
 }
+
+export interface Subscription {
+  endpoint: string;
+  expirationTime: number | null;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+  team: string;
+  userId: string;
+}

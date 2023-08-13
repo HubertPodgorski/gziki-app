@@ -18,6 +18,7 @@ export const AppContextProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [dogTasks, setDogTasks] = useState([]);
   const [eventTemplates, setEventTemplates] = useState([]);
+  const [subscriptionDetails, setSubscriptionDetails] = useState();
 
   return (
     <AppContext.Provider
@@ -34,6 +35,8 @@ export const AppContextProvider = ({ children }) => {
         setDogTasks,
         eventTemplates,
         setEventTemplates,
+        subscriptionDetails,
+        setSubscriptionDetails,
       }}
     >
       {children}

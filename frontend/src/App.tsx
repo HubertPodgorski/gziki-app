@@ -11,6 +11,7 @@ import BottomNavBar from "./components/BottomNavBar";
 import { ConfirmProvider } from "material-ui-confirm";
 import { SnackbarProvider } from "notistack";
 import { SocketContextProvider } from "./contexts/SocketContext.jsx";
+import NotificationsHandler from "./components/NotificationsHandler";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -20,6 +21,8 @@ const App = () => (
           <SocketContextProvider>
             <AppContextProvider>
               <SocketHandler />
+
+              <NotificationsHandler />
 
               <CssBaseline />
 

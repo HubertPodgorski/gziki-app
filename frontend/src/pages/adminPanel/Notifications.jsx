@@ -22,7 +22,6 @@ const Settings = () => {
   const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
 
   const onSubmit = async ({ title }) => {
-    console.log("title => ", title);
     await socket.emit("send_notification", {
       title,
     });

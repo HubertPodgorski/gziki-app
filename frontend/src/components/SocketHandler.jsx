@@ -13,6 +13,7 @@ const SocketHandler = () => {
     setUsers,
     setDogTasks,
     setEventTemplates,
+    setSubscriptionDetails,
   } = useContext(AppContext);
   const { user } = useAuthContext();
 
@@ -82,6 +83,10 @@ const SocketHandler = () => {
 
     socket.emit("get_all_event_templates", (eventTemplates) => {
       setEventTemplates(eventTemplates);
+    });
+
+    socket.emit("get_subscription_details", (subscriptionDetails) => {
+      setSubscriptionDetails(subscriptionDetails);
     });
   }, [user, socket]);
 

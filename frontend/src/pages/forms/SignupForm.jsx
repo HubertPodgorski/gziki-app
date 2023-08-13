@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { notAuthenticatedRoutes } from "../../helpers/routesAndPaths";
 import { useSignup } from "../../hooks/useSignup";
 
-const validTeamCodes = ["DZIKIEGZIKI", "TEST"];
+const validTeamCodes = ["DZIKIEGZIKI", "TEST", "DZIKIE_GZIKI_NABOR"];
 
 const SignupForm = () => {
   const theme = useTheme();
