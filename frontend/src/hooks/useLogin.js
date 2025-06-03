@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { apiSuffix } from "../helpers/apiCall";
 
 export const useLogin = () => {
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 

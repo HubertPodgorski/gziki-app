@@ -22,7 +22,7 @@ const UserForm = ({ open, onClose, initialData, editingId }) => {
     const { name, dogs } = initialData;
 
     reset({ name, dogs: dogs.map(({ _id }) => _id) });
-  }, [initialData]);
+  }, [initialData, reset]);
 
   const onSubmit = async (values) => {
     // TODO: make helper and reuse it in tasks?
@@ -30,7 +30,7 @@ const UserForm = ({ open, onClose, initialData, editingId }) => {
       .map((dogId) => {
         const dog = dogs.find(({ _id }) => _id === dogId);
 
-        if (!dog) return;
+        if (!dog) return undefined;
 
         return dog;
       })

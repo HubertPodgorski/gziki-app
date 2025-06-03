@@ -30,6 +30,7 @@ export interface Position {
 export interface Dog {
   _id: string;
   name: string;
+  note?: string;
 }
 
 export interface Event {

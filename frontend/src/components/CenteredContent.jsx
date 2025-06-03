@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, useTheme, styled } from "@mui/material";
+import { Paper, styled } from "@mui/material";
 
 const WrapperStyled = styled(Paper)(({ theme }) => ({
   top: 2,

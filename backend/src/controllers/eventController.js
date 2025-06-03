@@ -2,7 +2,6 @@ const EventModel = require("../models/eventModel");
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { pushNotifications } = require("../helpers/push");
 
 // get all events
 const getAllEvents = async (callback, userToken) => {
@@ -44,10 +43,6 @@ const createEvent = async (received, callback, io, userToken) => {
 
   callback(event);
   io.to(team).emit("events_updated", allEvents);
-
-  pushNotifications(userToken, {
-    title: `Event added: ${name}`,
-  });
 };
 
 // delete event
@@ -84,7 +79,11 @@ const updateEventById = async (received, callback, io, userToken) => {
   //   return res.status(404).json({ error: "EVENT_NOT_FOUND" });
   // }
 
-  const event = await EventModel.findOneAndUpdate({ _id }, { ...received });
+  const event = await EventModel.findOneAndUpdate(
+    { _id },
+    { ...received },
+    { new: true }
+  );
 
   // TODO: handle that
   // if (!event) {

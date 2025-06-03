@@ -122,14 +122,14 @@ const EventDetails = ({ users, dogs, id }) => {
         background: "#333",
         padding: theme.spacing(1),
         boxShadow: "none",
-        [".MuiAccordionDetails-root"]: {
+        ".MuiAccordionDetails-root": {
           padding: 0,
         },
-        [".MuiAccordionSummary-root"]: {
+        ".MuiAccordionSummary-root": {
           minHeight: 0,
           padding: 0,
         },
-        [".MuiAccordionSummary-content"]: {
+        ".MuiAccordionSummary-content": {
           margin: 0,
         },
       }}

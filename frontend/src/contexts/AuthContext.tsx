@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { User } from "../helpers/types";
+import { Dog, User } from "../helpers/types";
 import { AuthContextType } from "./types";
 import { Socket } from "socket.io-client";
 
@@ -26,6 +26,10 @@ export const AuthContextProvider = ({ children }) => {
     setUser(user);
   };
 
+  const setUserDogs = (dogs: Dog[]) => {
+    setUser((prevUser) => ({ ...prevUser, dogs }));
+  };
+
   useEffect(() => {
     const userLocalstorage = localStorage.getItem("user");
 
@@ -48,7 +52,15 @@ export const AuthContextProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, setUser, setSocket, socket }}
+      value={{
+        user,
+        login,
+        logout,
+        setUser,
+        setSocket,
+        socket,
+        setUserDogs,
+      }}
     >
       {children}
     </AuthContext.Provider>

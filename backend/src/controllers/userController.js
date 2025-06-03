@@ -82,7 +82,11 @@ const updateUserById = async (received, callback, io, userToken) => {
   //   return res.status(404).json({ error: "USER_NOT_FOUND" });
   // }
 
-  const user = await UserModel.findOneAndUpdate({ _id }, { ...received, team });
+  const user = await UserModel.findOneAndUpdate(
+    { _id },
+    { ...received, team },
+    { new: true }
+  );
 
   // TODO: handle that
   // if (!user) {

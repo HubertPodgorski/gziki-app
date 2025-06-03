@@ -11,7 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormTextField from "../../components/inputs/FormTextField";
 import FormGrid from "../../components/FormGrid";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   notAuthenticatedRoutes,
   userPaths,
@@ -23,8 +23,7 @@ const LoginForm = () => {
 
   const { user } = useAuthContext();
   const navigate = useNavigate();
-  const prevRoute = useLocation();
-  const { login, loading, error } = useLogin();
+  const { login, loading } = useLogin();
 
   useEffect(() => {
     const initialLocation = JSON.parse(
@@ -34,13 +33,13 @@ const LoginForm = () => {
     if (user) {
       navigate(initialLocation?.pathname || userPaths.tasks);
     }
-  }, [user]);
+  }, [navigate, user]);
 
   const formMethods = useForm({
     defaultValues: { password: "", email: "" },
   });
 
-  const { handleSubmit, reset } = useMemo(() => formMethods, [formMethods]);
+  const { handleSubmit } = useMemo(() => formMethods, [formMethods]);
 
   const onSubmit = async ({ password, email }) => {
     await login(email, password);

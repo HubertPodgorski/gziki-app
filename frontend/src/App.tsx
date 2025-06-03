@@ -4,14 +4,15 @@ import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { AppContextProvider } from "./contexts/AppContext";
 import Router from "./Router";
 import theme from "./helpers/theme";
-import "dayjs/locale/pl";
 import SocketHandler from "./components/SocketHandler";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import BottomNavBar from "./components/BottomNavBar";
 import { ConfirmProvider } from "material-ui-confirm";
 import { SnackbarProvider } from "notistack";
 import { SocketContextProvider } from "./contexts/SocketContext.jsx";
-import NotificationsHandler from "./components/NotificationsHandler";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { pl } from "date-fns/locale/pl";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -19,29 +20,32 @@ const App = () => (
       <ConfirmProvider>
         <AuthContextProvider>
           <SocketContextProvider>
-            <AppContextProvider>
-              <SocketHandler />
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={pl}
+            >
+              <AppContextProvider>
+                <SocketHandler />
 
-              <NotificationsHandler />
+                <CssBaseline />
 
-              <CssBaseline />
+                <BrowserRouter>
+                  <Box
+                    sx={{
+                      padding: theme.spacing(2, 2, 9, 2),
+                      [theme.breakpoints.down("md")]: {
+                        gridGap: theme.spacing(1),
+                        padding: theme.spacing(1, 1, 9, 1),
+                      },
+                    }}
+                  >
+                    <Router />
 
-              <BrowserRouter>
-                <Box
-                  sx={{
-                    padding: theme.spacing(2, 2, 9, 2),
-                    [theme.breakpoints.down("md")]: {
-                      gridGap: theme.spacing(1),
-                      padding: theme.spacing(1, 1, 9, 1),
-                    },
-                  }}
-                >
-                  <Router />
-
-                  <BottomNavBar />
-                </Box>
-              </BrowserRouter>
-            </AppContextProvider>
+                    <BottomNavBar />
+                  </Box>
+                </BrowserRouter>
+              </AppContextProvider>
+            </LocalizationProvider>
           </SocketContextProvider>
         </AuthContextProvider>
       </ConfirmProvider>

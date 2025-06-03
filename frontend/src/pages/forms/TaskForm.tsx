@@ -46,7 +46,7 @@ const TaskForm = ({
 
   useEffect(() => {
     reset(mapToFormType(initialData));
-  }, [initialData]);
+  }, [initialData, reset]);
 
   const getPosition = (values: CreateEditTaskFormType): Position => {
     if (editingId) {
@@ -73,7 +73,7 @@ const TaskForm = ({
       .map((dogId) => {
         const dog = dogs.find(({ _id }) => _id === dogId);
 
-        if (!dog) return;
+        if (!dog) return undefined;
 
         return dog;
       })

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Card, CardContent, useTheme, styled } from "@mui/material";
+import { Box, Card, styled } from "@mui/material";
 import { Draggable } from "react-beautiful-dnd";
 
 const CardContentStyled = styled(Box)(({ theme }) => ({

@@ -1,14 +1,15 @@
-import dayjs from "dayjs";
 import { EventType } from "../components/inputs/consts";
 import theme from "./theme";
+import { formatDate } from "./dateHelpers";
 
 export const sortByNewest = (eventA, eventB) => {
   return new Date(eventB.date) - new Date(eventA.date);
 };
 
 export const getFormattedDate = (date) =>
-  `${dayjs(date).locale("pl").format("dddd")} ${dayjs(date).format(
-    "DD/MM/YYYY HH:mm"
+  `${formatDate(date, "eeee")} ${formatDate(
+    date,
+    "dd/MM/yyyy HH:mm"
   )}`.toUpperCase();
 
 export const sortByAttendance = (objectA, objectB) => {
