@@ -16,6 +16,7 @@ export interface AuthContextType {
   setUser: Dispatch<SetStateAction<User>>;
   socket: Socket<any, any> | null;
   setSocket: (socket: Socket<any, any> | null) => void;
+  setUserDogs: (dogs: Dog[]) => void;
 }
 
 export interface AppContextType {

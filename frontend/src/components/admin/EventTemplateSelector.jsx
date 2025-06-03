@@ -10,7 +10,7 @@ const EventTemplateSelector = () => {
   const { socket } = useSocketContext();
 
   const theme = useTheme();
-  const { eventTemplates, tasks } = useContext(AppContext);
+  const { eventTemplates } = useContext(AppContext);
 
   const confirm = useConfirm();
 

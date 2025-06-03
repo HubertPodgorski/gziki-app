@@ -50,6 +50,11 @@ const runMigrations = async () => {
   // );
   //
   // console.log("result6 => ", result6);
+
+  // Add note field to every dog
+  // const result7 = await DogModel.updateMany({}, { $set: { note: "" } });
+  //
+  // console.log("result7 => ", result7);
 };
 
 runMigrations();

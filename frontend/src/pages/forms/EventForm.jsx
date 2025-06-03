@@ -21,7 +21,7 @@ const EventForm = ({ open, onClose, initialData, editingId }) => {
     const { name, date, type } = initialData;
 
     reset({ name, date, type });
-  }, [initialData]);
+  }, [initialData, reset]);
 
   const onSubmit = async (values) => {
     const data = {

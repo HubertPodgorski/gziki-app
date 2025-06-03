@@ -86,7 +86,11 @@ const updateTaskById = async (received, callback, io, userToken) => {
   //   return res.status(404).json({ error: "TASK_NOT_FOUND" });
   // }
 
-  const task = await TaskModel.findOneAndUpdate({ _id }, { ...received });
+  const task = await TaskModel.findOneAndUpdate(
+    { _id },
+    { ...received },
+    { new: true }
+  );
 
   // TODO: handle that
   // if (!task) {

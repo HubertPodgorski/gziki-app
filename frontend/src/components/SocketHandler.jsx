@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../contexts/AppContext";
 import { useSocketContext } from "../hooks/useSocketContext";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -15,7 +15,7 @@ const SocketHandler = () => {
     setEventTemplates,
     setSubscriptionDetails,
   } = useContext(AppContext);
-  const { user } = useAuthContext();
+  const { user, setUserDogs } = useAuthContext();
 
   useEffect(() => {
     socket.on("tasks_updated", (received) => {
@@ -28,6 +28,11 @@ const SocketHandler = () => {
 
     socket.on("dogs_updated", (received) => {
       setDogs(received);
+
+      // sync dog changes to user dogs
+      const userDogIds = user.dogs.flatMap(({ _id }) => _id);
+      const userDogs = received.filter(({ _id }) => userDogIds.includes(_id));
+      setUserDogs(userDogs);
     });
 
     socket.on("events_updated", (received) => {
@@ -45,6 +50,7 @@ const SocketHandler = () => {
     return () => {
       socket.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   useEffect(() => {
@@ -88,6 +94,7 @@ const SocketHandler = () => {
     socket.emit("get_subscription_details", (subscriptionDetails) => {
       setSubscriptionDetails(subscriptionDetails);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, socket]);
 
   return null;

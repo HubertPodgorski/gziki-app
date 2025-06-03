@@ -23,6 +23,7 @@ export const SocketContextProvider = ({ children }) => {
         userLocalstorage ? `?token=${JSON.parse(userLocalstorage).token}` : ""
       }`
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

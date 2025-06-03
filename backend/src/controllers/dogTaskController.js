@@ -72,7 +72,8 @@ const updateDogTaskById = async (received, callback, io, userToken) => {
 
   const dogTask = await DogTaskModel.findOneAndUpdate(
     { _id: _id },
-    { ...received }
+    { ...received },
+    { new: true }
   );
 
   // TODO: WS handler for dog not found

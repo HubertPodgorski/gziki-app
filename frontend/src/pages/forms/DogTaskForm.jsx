@@ -19,7 +19,7 @@ const DogTaskForm = ({ open, onClose, initialData, editingId }) => {
     const { name } = initialData;
 
     reset({ name });
-  }, [initialData]);
+  }, [initialData, reset]);
 
   const onSubmit = async ({ name }) => {
     const data = { name };

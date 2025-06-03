@@ -9,13 +9,13 @@ import {
 import CenteredContent from "../../components/CenteredContent";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventForm from "../forms/EventForm";
-import dayjs from "dayjs";
 import { useFormHelpers } from "../../hooks/useFormHelpers";
 import { AppContext } from "../../contexts/AppContext";
 import { useConfirmModal } from "../../hooks/useConfirmModal";
 import { EventType } from "../../components/inputs/consts";
 import { getBackgroundColorBasedOnType } from "../../helpers/calendar";
 import { useSocketContext } from "../../hooks/useSocketContext";
+import { formatDate } from "../../helpers/dateHelpers";
 
 const Events = () => {
   const { socket } = useSocketContext();
@@ -70,7 +70,7 @@ const Events = () => {
             >
               {/*TODO: do edit*/}
               <ListItemButton>
-                {name}: {dayjs(date).format("DD/MM/YYYY HH:mm")}
+                {name}: {formatDate(date, "dd/MM/yyyy HH:mm")}
               </ListItemButton>
 
               <IconButton

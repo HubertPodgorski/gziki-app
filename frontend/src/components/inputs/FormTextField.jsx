@@ -2,7 +2,14 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 
-const FormTextField = ({ name, label, required = false, type, rules = {} }) => {
+const FormTextField = ({
+  name,
+  label,
+  required = false,
+  type,
+  rules = {},
+  rows = 1,
+}) => {
   const { control } = useFormContext();
 
   return (
@@ -19,6 +26,8 @@ const FormTextField = ({ name, label, required = false, type, rules = {} }) => {
           type={type}
           error={!!error}
           helperText={error?.message ?? ""}
+          multiline={rows > 1}
+          rows={rows}
         />
       )}
     />

@@ -95,7 +95,8 @@ const updateEventTemplateById = async (received, callback, io, userToken) => {
 
   const eventTemplate = await EventTemplateModel.findOneAndUpdate(
     { _id: _id },
-    { ...received, team }
+    { ...received, team },
+    { new: true }
   );
 
   // TODO: WS handler for event template not found
